@@ -1,0 +1,45 @@
+#include "SnapshotsDialog.h"
+SnapshotsDialog::SnapshotsDialog(QWidget *parent)
+	: QDialog(parent)
+{
+	setWindowTitle("Добавление снимка из базы данных");
+	resize(580,450);
+	QPushButton *add=new QPushButton("Добавить");
+	connect(add,SIGNAL(clicked()),SLOT(accept()));
+	QPushButton *cancel=new QPushButton("Отмена");
+	connect(cancel,SIGNAL(clicked()),SLOT(reject()));
+	QGridLayout *layout=new QGridLayout();
+	layout->addWidget(add,5,3,1,1);
+	layout->addWidget(cancel,5,4,1,1);
+	setLayout(layout);
+}
+void SnapshotsDialog::setDbModel(DatabaseModel &dbModel)
+{
+	this->dbModel=&dbModel;
+}
+int SnapshotsDialog::exec()
+{
+	setCursor(Qt::WaitCursor);
+	table=dbModel->snapshotsTable();
+	setCursor(Qt::ArrowCursor);
+	connect(table,SIGNAL(itemSelectionChanged()),SLOT(selectionChanged()));
+	((QGridLayout*)layout())->addWidget(table,0,0,5,5);
+	return QDialog::exec();
+}
+void SnapshotsDialog::selectionChanged()
+{
+	selectedId.clear();
+	QModelIndexList list=table->selectionModel()->selectedRows();
+	for(int i=0; i<list.count(); i++)
+	{
+		selectedId.push_back(table->item(list.at(i).row(),5)->data(Qt::DisplayRole).toInt());
+	}
+}
+QList<int> SnapshotsDialog::selectedIdentifiers()
+{
+	return selectedId;
+}
+SnapshotsDialog::~SnapshotsDialog()
+{
+
+}

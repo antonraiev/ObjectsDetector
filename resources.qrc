@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/bottomarrow.jpg</file>
+        <file>img/leftarrow.jpg</file>
+        <file>img/photo_icon.jpg</file>
+        <file>img/rightarrow.jpg</file>
+        <file>img/toparrow.jpg</file>
+        <file>img/video_icon.jpg</file>
+        <file>Resources/snapshot.wav</file>
+        <file>img/scene_icon.png</file>
+        <file>img/database_icon.png</file>
+    </qresource>
+</RCC>
