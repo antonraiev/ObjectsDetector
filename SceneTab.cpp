@@ -26,6 +26,7 @@ void SceneTab::addScene(int id)
 	sceneStruct=db->getScene(id);
 	db->disconnect();
 	scene->clear();
+	mapPoints.clear();
 	scene->addPixmap(sceneStruct.pixmap);
 }
 void SceneTab::setDatabase(Database &db)
@@ -54,16 +55,23 @@ void SceneTab::find()
 		QPoint *points = new QPoint[4];
 		if(!surf.compare(&sceneStruct.pixmap, &pixmap, points))
 		{
+			QPen pen;
+			if(object.descr.id == ROBOT_ID)
+				pen.setColor(Qt::green);
+			else
+				pen.setColor(Qt::red);
 			for(int i=0; i<4; i++)
-				scene->addLine(points[i].x(), points[i].y(), points[(i+1)%4].x(), points[(i+1)%4].y(), QPen(Qt::red));
-		}
-		QPoint min = QPoint(INT_MAX, INT_MAX), max=QPoint(0, 0);
-		for(int i=0; i<4; i++)
-		{
-			if(points[i].x()<=min.x() && points[i].y()<=min.y())
-				min=points[i];
-			if(points[i].x()>=max.x() && points[i].y()>=max.y())
-				max=points[i];
+				scene->addLine(points[i].x(), points[i].y(), points[(i+1)%4].x(), points[(i+1)%4].y(), pen);
+			QPoint min = QPoint(1000, 1000), max=QPoint(0, 0);
+			for(int i=0; i<4; i++)
+			{
+				if(sqrt(pow(points[i].x(), 2.) + pow(points[i].y(), 2.)) < sqrt(pow(min.x(), 2.) + pow(min.y(), 2.)) ) 
+					min=points[i];
+				if(sqrt(pow(points[i].x(), 2.) + pow(points[i].y(), 2.)) > sqrt(pow(max.x(), 2.) + pow(max.y(), 2.)) ) 
+					max=points[i];
+			}
+			QRect rect(min, max);
+			mapPoints.insert(make_pair(object.descr.id == ROBOT_ID, rect));
 		}
 		delete[] points;
 	}
@@ -71,7 +79,9 @@ void SceneTab::find()
 }
 void SceneTab::buildMap()
 {
-
+	scene->clear();
+	for(multimap<bool, QRect>::iterator it = mapPoints.begin(); it!=mapPoints.end(); it++)
+		scene->addRect(it->second, it->first ? QPen(Qt::green) : QPen(Qt::red), it->first ? QBrush(Qt::green) : QBrush(Qt::red));
 }
 void SceneTab::resizeEvent(QResizeEvent *ev)
 {

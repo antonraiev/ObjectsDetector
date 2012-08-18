@@ -179,6 +179,7 @@ QList<Object> Database::getObjects()
 			width=query.value(record.indexOf("image_width")).toInt();
 			height=query.value(record.indexOf("height")).toInt();
 			imageBytes=query.value(record.indexOf("object")).toByteArray();
+			object.descr.id = query.value(record.indexOf("name_id")).toInt();
 			object.descr.name=query.value(record.indexOf("name")).toString();
 			object.descr.description=query.value(record.indexOf("description")).toString();
 			object.id=query.value(record.indexOf("id")).toInt();

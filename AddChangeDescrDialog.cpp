@@ -37,6 +37,8 @@ void AddChangeDescrDialog::setDescription(QString description)
 void AddChangeDescrDialog::setName(QString name)
 {
 	nameEdit->setText(name);
+	if(name=="Робот")
+		nameEdit->setEnabled(false);
 }
 QString AddChangeDescrDialog::description()
 {

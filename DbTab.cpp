@@ -150,6 +150,11 @@ void DbTab::delButtonPressed()
 		for(int i=0; i<list.count(); i++)
 		{
 			int id=table->item(list.at(i).row(),2)->data(Qt::DisplayRole).toInt();
+			if(id == ROBOT_ID)
+			{
+				QMessageBox::warning(this, "Ошибка", "Робот не может быть удален", QMessageBox::Ok);
+				return;
+			}
 			db->deleteDescription(id);
 		}
 		reloadTable(2);

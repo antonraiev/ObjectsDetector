@@ -5,6 +5,7 @@
 #include "Database.h"
 #include "DatabaseModel.h"
 #include <map>
+
 class DbTab : public QWidget
 {
 	Q_OBJECT

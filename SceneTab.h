@@ -24,6 +24,7 @@ private:
 	Scene sceneStruct;
 	Database *db;
 	QGridLayout *mainLayout;
+	multimap<bool, QRect> mapPoints;
 };
 
 #endif // SCENETAB_H

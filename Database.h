@@ -2,6 +2,8 @@
 #include <QtGui>
 #include <QtSql>
 #include "Structs.h"
+#define ROBOT_ID 8
+
 class Database
 {
 public:
