@@ -1,0 +1,19 @@
+USE [ObstacleDetectorDB]
+GO
+
+/****** Object:  StoredProcedure [dbo].[GET_OBJECTS_DESCRIPTION]    Script Date: 08/20/2012 21:55:22 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[GET_OBJECTS_DESCRIPTION] 
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT * FROM [dbo].[Object_names];
+END
+
+GO
+

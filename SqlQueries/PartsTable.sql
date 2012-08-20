@@ -1,0 +1,41 @@
+USE [ObstacleDetectorDB]
+GO
+
+/****** Object:  Table [dbo].[Parts]    Script Date: 08/20/2012 21:50:13 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Parts](
+	[id] [int] IDENTITY(0,1) NOT NULL,
+	[scene_id] [int] NOT NULL,
+	[snapshot_id] [int] NOT NULL,
+ CONSTRAINT [PK_Parts] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Parts]  WITH CHECK ADD  CONSTRAINT [FK_Parts_Scenes] FOREIGN KEY([scene_id])
+REFERENCES [dbo].[Scenes] ([id])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Parts] CHECK CONSTRAINT [FK_Parts_Scenes]
+GO
+
+ALTER TABLE [dbo].[Parts]  WITH CHECK ADD  CONSTRAINT [FK_Parts_Snapshots] FOREIGN KEY([snapshot_id])
+REFERENCES [dbo].[Snapshots] ([id])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Parts] CHECK CONSTRAINT [FK_Parts_Snapshots]
+GO
+
+
