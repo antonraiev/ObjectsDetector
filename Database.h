@@ -18,11 +18,13 @@ public:
 	Scene getScene(int id) const;
 	void addPart(int sceneId,int snapshotId);
 	void addObject(int nameId,QPixmap object,int physHeight);
+	int addMap(QPixmap &pixmap);
+	Map getMap(int id) const;
 	QList<Snapshot> getSnapshots() const;
 	QList<Scene> getScenes() const;
 	void addDescription(QString name,QString description);
-	QList<Description> getDescriptions();
-	QList<Object> getObjects();
+	QList<Description> getDescriptions() const;
+	QList<Object> getObjects() const;
 	void changeDescription(Description descr);
 	void deleteDescription(int id);
 	void deleteSnapshot(int id);

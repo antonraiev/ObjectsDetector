@@ -6,6 +6,8 @@
 class SceneTab : public QWidget
 {
 	Q_OBJECT
+signals:
+	void mapCreated(int id);
 public:
 	SceneTab(QWidget *parent=0);
 	~SceneTab();
@@ -13,7 +15,7 @@ public slots:
 	void addScene(int id);
 	void setDatabase(Database &db);
 	void runScenesDialog();
-	void find();
+	void findObjects();
 	void buildMap();
 protected:
 	virtual void resizeEvent(QResizeEvent *ev);
@@ -25,6 +27,8 @@ private:
 	Database *db;
 	QGridLayout *mainLayout;
 	multimap<bool, QRect> mapPoints;
+	double robotHeightPx;
+	double robotHeightSm;
 };
 
 #endif // SCENETAB_H

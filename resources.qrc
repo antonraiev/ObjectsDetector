@@ -9,5 +9,6 @@
         <file>Resources/snapshot.wav</file>
         <file>img/scene_icon.png</file>
         <file>img/database_icon.png</file>
+        <file>img/map_icon.png</file>
     </qresource>
 </RCC>

@@ -31,4 +31,12 @@ struct Object
 	int phys_height;
 	Description descr;
 };
+struct Map
+{
+	int id;
+	QImage image;
+	int width;
+	int height;
+	QDateTime created;
+};
 #endif // SNAPSHOT_H

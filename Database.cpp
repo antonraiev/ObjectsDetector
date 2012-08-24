@@ -157,7 +157,7 @@ void Database::addObject(int nameId,QPixmap object,int physHeight)
 	query.bindValue(":name_id",nameId);
 	query.exec();
 }
-QList<Object> Database::getObjects()
+QList<Object> Database::getObjects() const
 {
 	QByteArray imageBytes;
 	Object object;
@@ -194,6 +194,68 @@ QList<Object> Database::getObjects()
 		return objlist;
 	}
 }
+int Database::addMap(QPixmap &pixmap)
+{
+	QByteArray imageBytes;
+	QBuffer buffer(&imageBytes);
+	buffer.open(QBuffer::WriteOnly);
+	QImage image=pixmap.toImage();
+	image.save(&buffer,"PNG");
+	QSqlQuery query;
+
+	query.setForwardOnly(true);
+	query.prepare("{CALL dbo.ADD_MAP(:map,:width,:height,:id)}");
+	query.bindValue(":map",imageBytes);
+	query.bindValue(":width",pixmap.width());
+	query.bindValue(":height",pixmap.height());
+	int id;
+	query.bindValue(":id", id, QSql::Out);
+	if(!query.exec())
+	{
+		QMessageBox::warning(0,"Ошибка базы данных",query.lastError().text());
+		return -1;
+	}
+	else 
+	{
+		id=query.boundValue(":id").toInt();
+		return id;
+	}
+}
+Map Database::getMap(int id) const
+{
+	QByteArray imageBytes;
+	int width,height;
+	QBuffer buffer;
+	QSqlQuery query;
+	query.setForwardOnly(true);
+	query.prepare("{call GET_MAP(:id)}");
+	query.bindValue(":id",id);
+	if(!query.exec())
+	{
+		QMessageBox::warning(0,"Ошибка базы данных",query.lastError().text());
+		return Map();
+	}
+	else
+	{
+		QSqlRecord record=query.record();
+		query.next();
+		width=query.value(record.indexOf("width")).toInt();
+		height=query.value(record.indexOf("height")).toInt();
+		imageBytes=query.value(record.indexOf("map")).toByteArray();
+		QImage image(width,height,QImage::Format_ARGB32);
+		buffer.setBuffer(&imageBytes);
+		buffer.open(QBuffer::ReadOnly);
+		image.load(&buffer,"PNG");
+		Map map;
+		map.image = image;
+		map.id = id;
+		map.created = query.value(record.indexOf("datetime")).toDateTime();
+		map.height = height;
+		map.width = width;
+		return map;
+	}
+}
+
 Scene Database::getScene(int id) const
 {
 	QByteArray imageBytes;
@@ -273,7 +335,7 @@ void Database::addDescription(QString name,QString description)
 	query.bindValue(":description",description);
 	query.exec();
 }
-QList<Description> Database::getDescriptions()
+QList<Description> Database::getDescriptions() const
 {
 	QSqlQuery query;
 	QList<Description> descrlist;

@@ -5,6 +5,7 @@
 #include "videoTab.h"
 #include "snapShotTab.h"
 #include "SceneTab.h"
+#include "MapTab.h"
 #include "DbTab.h"
 #include "Database.h"
 class mainWindow : public QWidget
@@ -18,6 +19,7 @@ private:
 	videoTab *vTab;
 	snapShotTab *snapTab;
 	SceneTab *sceneTab;
+	MapTab *mapTab;
 	DbTab *dbTab;
 	Database db;
 };

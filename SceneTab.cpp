@@ -13,7 +13,7 @@ SceneTab::SceneTab(QWidget *parent)
 	connect(dialogButton,SIGNAL(clicked()),SLOT(runScenesDialog()));
 	mainLayout->addWidget(dialogButton,8,0,1,1);
 	QPushButton *findButton=new QPushButton("Искать объекты");
-	connect(findButton,SIGNAL(clicked()),SLOT(find()));
+	connect(findButton,SIGNAL(clicked()),SLOT(findObjects()));
 	mainLayout->addWidget(findButton,8,1,1,1);
 	QPushButton *mapButton=new QPushButton("Строить карту");
 	connect(mapButton,SIGNAL(clicked()),SLOT(buildMap()));
@@ -43,7 +43,7 @@ void SceneTab::runScenesDialog()
 	if(result==QDialog::Accepted)
 		addScene(dialog->selectedSceneId());
 }
-void SceneTab::find()
+void SceneTab::findObjects()
 {
 	setCursor(Qt::WaitCursor);
 	db->connect();
@@ -62,6 +62,7 @@ void SceneTab::find()
 				pen.setColor(Qt::red);
 			for(int i=0; i<4; i++)
 				scene->addLine(points[i].x(), points[i].y(), points[(i+1)%4].x(), points[(i+1)%4].y(), pen);
+
 			QPoint min = QPoint(1000, 1000), max=QPoint(0, 0);
 			for(int i=0; i<4; i++)
 			{
@@ -70,8 +71,14 @@ void SceneTab::find()
 				if(sqrt(pow(points[i].x(), 2.) + pow(points[i].y(), 2.)) > sqrt(pow(max.x(), 2.) + pow(max.y(), 2.)) ) 
 					max=points[i];
 			}
+
 			QRect rect(min, max);
 			mapPoints.insert(make_pair(object.descr.id == ROBOT_ID, rect));
+			if(object.descr.id == ROBOT_ID)
+			{
+				robotHeightPx = max.y() - min.y();
+				robotHeightSm = object.phys_height;
+			}
 		}
 		delete[] points;
 	}
@@ -79,9 +86,47 @@ void SceneTab::find()
 }
 void SceneTab::buildMap()
 {
-	scene->clear();
+	double scale = robotHeightPx / robotHeightSm;
 	for(multimap<bool, QRect>::iterator it = mapPoints.begin(); it!=mapPoints.end(); it++)
-		scene->addRect(it->second, it->first ? QPen(Qt::green) : QPen(Qt::red), it->first ? QBrush(Qt::green) : QBrush(Qt::red));
+	{
+		QRect objectRect = it->second;
+		bool isRobot = it->first;
+		scene->addRect(objectRect.x() / scale, objectRect.y() / scale, objectRect.width() / scale, objectRect.height() / scale,
+			isRobot ? QPen(Qt::green) : QPen(Qt::red), isRobot ? QBrush(Qt::green) : QBrush(Qt::red));
+	}
+	int maxX = 0, maxY = 0;
+	for(multimap<bool, QRect>::iterator it = mapPoints.begin(); it!=mapPoints.end(); it++)
+	{
+		QRect objectRect = it->second;
+		if(objectRect.x() / scale + objectRect.width() / scale > maxX)
+			maxX = objectRect.x() / scale + objectRect.width() / scale;
+		if(objectRect.y() / scale + objectRect.height() / scale > maxY)
+			maxY = objectRect.y() / scale + objectRect.height() / scale;
+	}
+
+	QPixmap pixmap = QPixmap::grabWidget(sceneView, 0, 0, maxX, maxY);
+	db->connect();
+	int mapId = db->addMap(pixmap);
+	db->disconnect();
+	emit mapCreated(mapId);
+	//QFile file("map1.txt");
+	//file.open(QIODevice::WriteOnly | QIODevice::Text);
+	//QTextStream stream(&file);
+	//stream << image.width() << " " << image.height() << "\n";
+	//for(int i = 0; i<image.height(); i++)
+	//{
+	//	for(int j = 0; j<image.width(); j++)
+	//	{
+	//		if(image.pixel(j, i) == qRgb(255, 0 , 0))
+	//			stream << "1";
+	//		else if(image.pixel(j, i) == qRgb(0, 255, 0))
+	//			stream << "2";
+	//		else
+	//			stream << "0";
+	//	}
+	//	stream << "\n";
+	//}
+	//file.close();
 }
 void SceneTab::resizeEvent(QResizeEvent *ev)
 {
