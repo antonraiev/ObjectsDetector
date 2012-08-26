@@ -12,7 +12,7 @@ public slots:
 	void addMap(int id);
 	void setDatabase(Database &db);
 	void runMapsDialog();
-	void saveMap();
+	void saveMapToFile();
 protected:
 	virtual void resizeEvent(QResizeEvent *ev);
 private:

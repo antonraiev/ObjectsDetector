@@ -23,7 +23,7 @@ private:
 	CvSURF surf;
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
-	Scene sceneStruct;
+	Scene currentScene;
 	Database *db;
 	QGridLayout *mainLayout;
 	multimap<bool, QRect> mapPoints;

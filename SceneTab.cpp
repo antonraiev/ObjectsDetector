@@ -23,11 +23,11 @@ SceneTab::SceneTab(QWidget *parent)
 void SceneTab::addScene(int id)
 {
 	db->connect();
-	sceneStruct=db->getScene(id);
+	currentScene=db->getScene(id);
 	db->disconnect();
 	scene->clear();
 	mapPoints.clear();
-	scene->addPixmap(sceneStruct.pixmap);
+	scene->addPixmap(currentScene.pixmap);
 }
 void SceneTab::setDatabase(Database &db)
 {
@@ -53,7 +53,7 @@ void SceneTab::findObjects()
 	{
 		QPixmap pixmap = QPixmap::fromImage(object.object);
 		QPoint *points = new QPoint[4];
-		if(!surf.compare(&sceneStruct.pixmap, &pixmap, points))
+		if(!surf.compare(&currentScene.pixmap, &pixmap, points))
 		{
 			QPen pen;
 			if(object.descr.id == ROBOT_ID)
@@ -86,6 +86,7 @@ void SceneTab::findObjects()
 }
 void SceneTab::buildMap()
 {
+	scene->clear();
 	double scale = robotHeightPx / robotHeightSm;
 	for(multimap<bool, QRect>::iterator it = mapPoints.begin(); it!=mapPoints.end(); it++)
 	{
@@ -108,25 +109,9 @@ void SceneTab::buildMap()
 	db->connect();
 	int mapId = db->addMap(pixmap);
 	db->disconnect();
+	scene->clear();
+	scene->addPixmap(currentScene.pixmap);
 	emit mapCreated(mapId);
-	//QFile file("map1.txt");
-	//file.open(QIODevice::WriteOnly | QIODevice::Text);
-	//QTextStream stream(&file);
-	//stream << image.width() << " " << image.height() << "\n";
-	//for(int i = 0; i<image.height(); i++)
-	//{
-	//	for(int j = 0; j<image.width(); j++)
-	//	{
-	//		if(image.pixel(j, i) == qRgb(255, 0 , 0))
-	//			stream << "1";
-	//		else if(image.pixel(j, i) == qRgb(0, 255, 0))
-	//			stream << "2";
-	//		else
-	//			stream << "0";
-	//	}
-	//	stream << "\n";
-	//}
-	//file.close();
 }
 void SceneTab::resizeEvent(QResizeEvent *ev)
 {
