@@ -2,21 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
-//#include "MeasureUnit.h"
-//#include "VideoSource.h"
-//#include "Controller.h"
 #include "CMControl.h"
-#include "AbstractCamera.h"
-#include "videoWidget.h"
-#include "Database.h"
-class videoTab : public QWidget
+#include "../views/VideoView.h"
+#include "../database/Database.h"
+class VideoTab : public QWidget
 {
 	Q_OBJECT
 signals:
 	void snapshotAdded(int id);
 public:
-	videoTab(QWidget *parent = 0, Qt::WFlags flags = 0);
-	~videoTab();
+	VideoTab(QWidget *parent = 0, Qt::WFlags flags = 0);
+	~VideoTab();
 	void setDatabase(Database &db);
 public slots:
 	void takeSnapshot();
@@ -28,7 +24,7 @@ public slots:
 protected:
 	virtual void paintEvent(QPaintEvent *ev);
 private:
-	videoWidget *video;
+	VideoView *video;
 	Database *db;
 };
 

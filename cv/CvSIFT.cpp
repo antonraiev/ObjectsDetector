@@ -1,6 +1,5 @@
 #include "CvSIFT.h"
 
-
 CvSIFT:: CvSIFT()
 {
 	cv::initModule_nonfree();

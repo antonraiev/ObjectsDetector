@@ -1,13 +1,13 @@
-#include "videoTab.h"
+#include "VideoTab.h"
 #include <QtSql>
-#include "UsbCamera.h"
+#include "../camera/UsbCamera.h"
 #pragma comment(lib,"Control.lib")
 
-videoTab::videoTab(QWidget *parent, Qt::WFlags flags)
+VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	: QWidget(parent, flags)
 {
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("Windows-1251")); 
-	video = new videoWidget();
+	video = new VideoView();
 	QTimer* videoTimer = new QTimer(this);
 	connect(videoTimer, SIGNAL(timeout()), video, SLOT(repaint()));
 	videoTimer->setInterval(10);
@@ -72,11 +72,11 @@ videoTab::videoTab(QWidget *parent, Qt::WFlags flags)
 	mainLayout->addWidget(snap,1,3,1,1);
 	setLayout(mainLayout);
 }
-void videoTab::setDatabase(Database &db)
+void VideoTab::setDatabase(Database &db)
 {
 	this->db = &db;
 }
-void videoTab::takeSnapshot()
+void VideoTab::takeSnapshot()
 {
 	QSound sound("Resources/snapshot.wav");
 	sound.play();
@@ -89,31 +89,31 @@ void videoTab::takeSnapshot()
 	else emit snapshotAdded(id);
 	db->disconnect();
 }
-void videoTab::upCameraMove()
+void VideoTab::upCameraMove()
 {
 	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Up);
 }
-void videoTab::downCameraMove()
+void VideoTab::downCameraMove()
 {
 	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Down);
 }
-void videoTab::leftCameraMove()
+void VideoTab::leftCameraMove()
 {
 	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Left);
 }
-void videoTab::rightCameraMove()
+void VideoTab::rightCameraMove()
 {
 	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Right);
 }
-void videoTab::endCameraMove()
+void VideoTab::endCameraMove()
 {
 	dynamic_cast<UsbCamera*>(video->getCamera())->endMove();
 }
-void videoTab::paintEvent(QPaintEvent *ev)
+void VideoTab::paintEvent(QPaintEvent *ev)
 {
 	QPainter painter(this);
 }
 
-videoTab::~videoTab()
+VideoTab::~VideoTab()
 {
 }

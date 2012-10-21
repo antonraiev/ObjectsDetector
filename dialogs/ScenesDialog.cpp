@@ -1,5 +1,5 @@
 #include "ScenesDialog.h"
-#include "QModelIndexListHack.h"
+#include "../database/QModelIndexListHack.h"
 
 ScenesDialog::ScenesDialog(QWidget *parent)
 	: QDialog(parent)

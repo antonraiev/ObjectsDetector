@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{73a618ea-0986-45fd-b9ce-e43e5ea97a43}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{7d715d10-705c-4f6e-95ea-3ef92d2409f9}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{7b815c01-699b-4d0a-be53-dbc9c59134d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{14d1d7e4-6a63-4a67-94ec-8e4834e6af7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cv">
+      <UniqueIdentifier>{2d5faab7-6c3b-4d12-a692-0e1ac9c36c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dialogs">
+      <UniqueIdentifier>{24a5dc83-27a6-46ca-800f-801a1d6e5dbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tabs">
+      <UniqueIdentifier>{905334f8-968b-41f0-8c45-79218d90f66e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="views">
+      <UniqueIdentifier>{c8443830-2f29-48ef-8a2c-5fe9ba265407}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MainWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MainWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_resources.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SnapshotsDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SnapshotsDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QGraphicsSnapShotItem.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QGraphicsSnapShotItem.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SceneTab.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SceneTab.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ScenesDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ScenesDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_DbTab.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_DbTab.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AddChangeDescrDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AddChangeDescrDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AddObjectDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AddObjectDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ObjectView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ObjectView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MapTab.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MapTab.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AbstractCamera.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AbstractCamera.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_UsbCamera.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_UsbCamera.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_VideoView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_VideoView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="camera\UsbCamera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="database\Database.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\DatabaseModel.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\QModelIndexListHack.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="cv\CvSURF.cpp">
+      <Filter>cv</Filter>
+    </ClCompile>
+    <ClCompile Include="cv\CvSIFT.cpp">
+      <Filter>cv</Filter>
+    </ClCompile>
+    <ClCompile Include="cv\QtOpenCV.cpp">
+      <Filter>cv</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\AddChangeDescrDialog.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\AddObjectDialog.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\SnapshotsDialog.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="dialogs\ScenesDialog.cpp">
+      <Filter>dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="tabs\SceneTab.cpp">
+      <Filter>tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="tabs\MapTab.cpp">
+      <Filter>tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="tabs\DbTab.cpp">
+      <Filter>tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="views\ObjectView.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\QGraphicsSnapShotItem.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\SlidesView.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="views\VideoView.cpp">
+      <Filter>views</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="tabs\SnapshotTab.cpp">
+      <Filter>tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SnapshotTab.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SnapshotTab.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="tabs\VideoTab.cpp">
+      <Filter>tabs</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_VideoTab.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_VideoTab.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="resources.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="camera\AbstractCamera.h">
+      <Filter>camera</Filter>
+    </CustomBuild>
+    <CustomBuild Include="camera\UsbCamera.h">
+      <Filter>camera</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dialogs\AddChangeDescrDialog.h">
+      <Filter>dialogs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dialogs\AddObjectDialog.h">
+      <Filter>dialogs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dialogs\SnapshotsDialog.h">
+      <Filter>dialogs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="dialogs\ScenesDialog.h">
+      <Filter>dialogs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tabs\MapTab.h">
+      <Filter>tabs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tabs\SceneTab.h">
+      <Filter>tabs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tabs\DbTab.h">
+      <Filter>tabs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="views\ObjectView.h">
+      <Filter>views</Filter>
+    </CustomBuild>
+    <CustomBuild Include="views\VideoView.h">
+      <Filter>views</Filter>
+    </CustomBuild>
+    <CustomBuild Include="views\QGraphicsSnapShotItem.h">
+      <Filter>views</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MainWindow.h" />
+    <CustomBuild Include="tabs\SnapshotTab.h">
+      <Filter>tabs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tabs\VideoTab.h">
+      <Filter>tabs</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="database\Database.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\DatabaseModel.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\Structs.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\QModelIndexListHack.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="cv\CvSIFT.h">
+      <Filter>cv</Filter>
+    </ClInclude>
+    <ClInclude Include="cv\CvSURF.h">
+      <Filter>cv</Filter>
+    </ClInclude>
+    <ClInclude Include="cv\QtOpenCV.h">
+      <Filter>cv</Filter>
+    </ClInclude>
+    <ClInclude Include="views\SlidesView.h">
+      <Filter>views</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Deps.txt" />
+  </ItemGroup>
+</Project>

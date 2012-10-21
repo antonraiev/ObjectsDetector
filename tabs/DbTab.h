@@ -2,8 +2,8 @@
 #define DBTAB_H
 
 #include <QtGui>
-#include "Database.h"
-#include "DatabaseModel.h"
+#include "../database/Database.h"
+#include "../database/DatabaseModel.h"
 #include <map>
 
 class DbTab : public QWidget

@@ -1,14 +1,14 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 #include <QtGui>
-#include "AbstractCamera.h"
-class videoWidget : public QLabel
+#include "../camera/AbstractCamera.h"
+class VideoView : public QLabel
 {
 	Q_OBJECT
 public:
-	videoWidget(QWidget *parent=0);
+	VideoView(QWidget *parent=0);
 	AbstractCamera* getCamera();
-	~videoWidget();
+	~VideoView();
 protected:
 	virtual void paintEvent(QPaintEvent *ev);
 	virtual void resizeEvent(QResizeEvent *ev);

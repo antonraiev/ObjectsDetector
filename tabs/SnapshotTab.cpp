@@ -1,9 +1,9 @@
-#include "snapShotTab.h"
-#include "QGraphicsSnapShotItem.h"
-#include "SnapshotsDialog.h"
-#include "ScenesDialog.h"
-#include "DatabaseModel.h"
-snapShotTab::snapShotTab(QWidget *parent)
+#include "SnapshotTab.h"
+#include "../views/QGraphicsSnapShotItem.h"
+#include "../dialogs/SnapshotsDialog.h"
+#include "../dialogs/ScenesDialog.h"
+#include "../database/DatabaseModel.h"
+SnapshotTab::SnapshotTab(QWidget *parent)
 	: QWidget(parent)
 {
 	scene=new QGraphicsScene();
@@ -68,7 +68,7 @@ snapShotTab::snapShotTab(QWidget *parent)
 	mainLayout->addLayout(slidesLayout,1);
 	setLayout(mainLayout);
 }
-void snapShotTab::moveSlidesRight()
+void SnapshotTab::moveSlidesRight()
 {
 	QRectF slidesRect=slidesView->sceneRect();
 	slidesRect.setX(slidesRect.x()+slides.back()->boundingRect().width()+10);
@@ -81,7 +81,7 @@ void snapShotTab::moveSlidesRight()
 		rightArrow->setEnabled(true);
 	else rightArrow->setEnabled(false);
 }
-void snapShotTab::moveSlidesLeft()
+void SnapshotTab::moveSlidesLeft()
 {
 	QRectF slidesRect=slidesView->sceneRect();
 	slidesRect.setX(slidesRect.x()-slides.back()->boundingRect().width()-10);
@@ -94,7 +94,7 @@ void snapShotTab::moveSlidesLeft()
 		rightArrow->setEnabled(true);
 	else rightArrow->setEnabled(false);
 }
-void snapShotTab::runSnapshotsDialog()
+void SnapshotTab::runSnapshotsDialog()
 {
 	SnapshotsDialog *dialog=new SnapshotsDialog(this);
 	DatabaseModel dbModel;
@@ -110,7 +110,7 @@ void snapShotTab::runSnapshotsDialog()
 		}
 	}
 }
-bool snapShotTab::canShiftedLeft()
+bool SnapshotTab::canShiftedLeft()
 {
 	double slideLeftBound=scaledSlides.front()->scenePos().x();
 	double viewLeftBound=slidesView->sceneRect().x();
@@ -118,7 +118,7 @@ bool snapShotTab::canShiftedLeft()
 		return false;
 	else return true;
 }
-bool snapShotTab::canShiftedRight()
+bool SnapshotTab::canShiftedRight()
 {
 	double justx=scaledSlides.back()->scenePos().x();
 	double slideRightBound=scaledSlides.back()->pos().x()+scaledSlides.back()->boundingRect().width();
@@ -128,16 +128,16 @@ bool snapShotTab::canShiftedRight()
 		return false;
 	else return true;
 }
-void snapShotTab::resizeEvent(QResizeEvent *ev)
+void SnapshotTab::resizeEvent(QResizeEvent *ev)
 {
 	scene->setSceneRect(sceneView->rect());
 	QWidget::resizeEvent(ev);
 }
-void snapShotTab::setDatabase(Database &db)
+void SnapshotTab::setDatabase(Database &db)
 {
 	this->db=&db;
 }
-void snapShotTab::addSlide(int id)
+void SnapshotTab::addSlide(int id)
 {
 	db->connect();
 	Snapshot snapshot=db->getSnapshot(id);
@@ -148,7 +148,7 @@ void snapShotTab::addSlide(int id)
 	slides.push_back(slide);
 	drawSlides(1);
 }
-void snapShotTab::drawSlides(int n)
+void SnapshotTab::drawSlides(int n)
 {
 	if(n!=1)
 		return;
@@ -173,7 +173,7 @@ void snapShotTab::drawSlides(int n)
 	else rightArrow->setEnabled(false);
 	}
 }
-void snapShotTab::addScenePart(int n)
+void SnapshotTab::addScenePart(int n)
 {
 	db->connect();
 	QGraphicsPixmapItem *item=new QGraphicsPixmapItem(QPixmap::fromImage(db->getSnapshot(n).image));
@@ -183,7 +183,7 @@ void snapShotTab::addScenePart(int n)
 	item->setFlags(QGraphicsItem::ItemIsMovable);
 }
 
-void snapShotTab::runScenesDialog()
+void SnapshotTab::runScenesDialog()
 {
 	ScenesDialog *dialog=new ScenesDialog(this);
 	DatabaseModel dbModel;
@@ -194,7 +194,7 @@ void snapShotTab::runScenesDialog()
 		addScene(dialog->selectedSceneId());
 }
 
-void snapShotTab::addScene(int id)
+void SnapshotTab::addScene(int id)
 {
 	db->connect();
 	Scene curScene=db->getScene(id);
@@ -204,11 +204,11 @@ void snapShotTab::addScene(int id)
 	scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
 }
 
-void snapShotTab::resizeSceneBounds()
+void SnapshotTab::resizeSceneBounds()
 {
 	scene->setSceneRect(scene->itemsBoundingRect());
 }
-void snapShotTab::fixScene()
+void SnapshotTab::fixScene()
 {
 	QPoint min=QPoint(INT_MAX,INT_MAX),max=QPoint(0,0);
 	foreach(QGraphicsItem *item,scene->items())
@@ -241,22 +241,22 @@ scenePixmap = QPixmap::fromImage(image);
 	//lbl->show();
 	emit sceneFixed(sceneId);
 }
-void snapShotTab::clearScene()
+void SnapshotTab::clearScene()
 {
 	scene->clear();
 }
-void snapShotTab::clearSlidesList()
+void SnapshotTab::clearSlidesList()
 {
 	slides.clear();
 	scaledSlides.clear();
 	slidesScene->clear();
 }
-void snapShotTab::clearAll()
+void SnapshotTab::clearAll()
 {
 	clearScene();
 	clearSlidesList();
 }
-snapShotTab::~snapShotTab()
+SnapshotTab::~SnapshotTab()
 {
 	delete scene;
 	delete slidesScene;

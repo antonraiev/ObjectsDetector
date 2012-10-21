@@ -1,0 +1,6 @@
+opencv*.dll
+Qt*.dll
+GeneratedFiles/
+Debug/
+Release/
+DB/

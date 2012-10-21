@@ -1,16 +1,16 @@
-#include "mainWindow.h"
+#include "MainWindow.h"
 
-mainWindow::mainWindow(QWidget *parent, Qt::WFlags flags)
+MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 	: QWidget(parent, flags)
 {
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("cp1251"));
 	setWindowTitle("Обнаружитель объектов");
 	QTabWidget *tabs=new QTabWidget();
-	vTab=new videoTab();
+	vTab=new VideoTab();
 	vTab->setDatabase(db);
 	tabs->addTab(vTab,QIcon(":/img/video_icon.jpg"),"Видео");
 
-	snapTab=new snapShotTab();
+	snapTab=new SnapshotTab();
 	snapTab->setDatabase(db);
 	connect(vTab,SIGNAL(snapshotAdded(int)),snapTab,SLOT(addSlide(int)));
 	tabs->addTab(snapTab,QIcon(":/img/photo_icon.jpg"),"Снимки");
@@ -35,7 +35,7 @@ mainWindow::mainWindow(QWidget *parent, Qt::WFlags flags)
 	move(x(),y()-100);
 	resize(700,400);
 }
-mainWindow::~mainWindow()
+MainWindow::~MainWindow()
 {
 
 }

@@ -1,5 +1,5 @@
 #include "SnapshotsDialog.h"
-#include "QModelIndexListHack.h"
+#include "../database/QModelIndexListHack.h"
 SnapshotsDialog::SnapshotsDialog(QWidget *parent)
 	: QDialog(parent)
 {

@@ -1,5 +1,5 @@
 #include "SceneTab.h"
-#include "ScenesDialog.h"
+#include "../dialogs/ScenesDialog.h"
 SceneTab::SceneTab(QWidget *parent)
 	: QWidget(parent)
 {

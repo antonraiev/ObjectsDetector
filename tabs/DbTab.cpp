@@ -1,7 +1,7 @@
 #include "DbTab.h"
-#include "AddChangeDescrDialog.h"
-#include "AddObjectDialog.h"
-#include "QModelIndexListHack.h"
+#include "../dialogs/AddChangeDescrDialog.h"
+#include "../dialogs/AddObjectDialog.h"
+#include "../database/QModelIndexListHack.h"
 DbTab::DbTab(Database &db,QWidget *parent)
 	: QWidget(parent)
 {

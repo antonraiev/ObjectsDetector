@@ -1,5 +1,5 @@
 #include "MapTab.h"
-#include "ScenesDialog.h"
+#include "../dialogs/ScenesDialog.h"
 #include <QtGui>
 
 MapTab::MapTab(QWidget *parent)

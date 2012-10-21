@@ -1,9 +1,9 @@
 #ifndef SCENETAB_H
 #define SCENETAB_H
 #include <QtGui>
-#include "Database.h"
-#include "CvSURF.h"
-#include "CvSIFT.h"
+#include "../database/Database.h"
+#include "../cv/CvSURF.h"
+#include "../cv/CvSIFT.h"
 class SceneTab : public QWidget
 {
 	Q_OBJECT

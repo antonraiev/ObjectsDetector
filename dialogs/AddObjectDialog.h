@@ -2,8 +2,8 @@
 #define ADDOBJECTDIALOG_H
 
 #include <QtGui>
-#include "Database.h"
-#include "ObjectView.h"
+#include "../database/Database.h"
+#include "../views/ObjectView.h"
 class AddObjectDialog : public QDialog
 {
 	Q_OBJECT

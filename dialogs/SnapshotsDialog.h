@@ -2,8 +2,8 @@
 #define SNAPSHOTSDIALOG_H
 
 #include <QtGui>
-#include "Structs.h"
-#include "DatabaseModel.h"
+#include "../database/Structs.h"
+#include "../database/DatabaseModel.h"
 class SnapshotsDialog : public QDialog
 {
 	Q_OBJECT

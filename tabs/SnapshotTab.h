@@ -3,18 +3,18 @@
 
 #include <QtGui>
 #include <vector>
-#include "Database.h"
-#include "SlidesView.h"
+#include "../database/Database.h"
+#include "../views/SlidesView.h"
 class QGraphicsSnapShotItem;
 #define SlidesList std::vector<QGraphicsSnapShotItem*>
-class snapShotTab : public QWidget
+class SnapshotTab : public QWidget
 {
 	Q_OBJECT
 signals:
 	void sceneFixed(int id);
 public:
-	snapShotTab(QWidget *parent = 0);
-	~snapShotTab();
+	SnapshotTab(QWidget *parent = 0);
+	~SnapshotTab();
 	void setDatabase(Database &db);
 public slots:
 	void addSlide(int id);

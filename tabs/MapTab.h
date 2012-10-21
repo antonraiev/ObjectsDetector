@@ -1,7 +1,7 @@
 #ifndef MAPTAB_H
 #define MAPTAB_H
 #include <QtGui>
-#include "Database.h"
+#include "../database/Database.h"
 #include <qabstractsocket.h>
 #include <qtcpsocket.h>
 

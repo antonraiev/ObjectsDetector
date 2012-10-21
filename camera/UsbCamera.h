@@ -1,6 +1,6 @@
 #pragma once
 #include <QtGui>
-#include "CvSURF.h"
+#include "../cv/CvSURF.h"
 #include "CMControl.h"
 #include "AbstractCamera.h"
 

@@ -2,8 +2,8 @@
 #define SCENESDIALOG_H
 
 #include <QtGui>
-#include "Structs.h"
-#include "DatabaseModel.h"
+#include "../database/Structs.h"
+#include "../database/DatabaseModel.h"
 
 class ScenesDialog : public QDialog
 {
