@@ -2,24 +2,8 @@
 
 UsbCamera::UsbCamera(void)
 {
-    capture = cvCaptureFromCAM(0);
-	if(capture == NULL)
-	{
-		cameraFound = false;
-	}
-	try
-	{
-		control = new CMControl();
-		rotateControl = true;
-	}
-	catch(...)
-	{
-		rotateControl = false;
-	}
-	//cameraFound = true; //Debug!!
-	moveTimer = new QTimer(this);
-	QObject::connect(moveTimer,SIGNAL(timeout()),SLOT(moveOnTimer()));
 	dimensions = QSize(defWidth,defHeight);
+	rotateControl = false;
 }
 
 void UsbCamera::setRenderWidget(QWidget *widget)
@@ -29,35 +13,15 @@ void UsbCamera::setRenderWidget(QWidget *widget)
 
 bool UsbCamera::Run()
 {
+    capture = cvCaptureFromCAM(0);
+	if(capture == NULL)
+	{
+		cameraFound = false;
+		return cameraFound;
+	}
 	return true;
 }
-void UsbCamera::beginMove(Direction direction)
-{
-	if(!cameraFound)
-		return;
-	moveTimer->setInterval(10);
-	moveTimer->start();
-	moveDirection=direction;
-}
-void UsbCamera::moveOnTimer()
-{
-	switch(moveDirection)
-	{
-	case Up:
-		control->Move(0,1); break;
-	case Left:
-		control->Move(-1,0); break;
-	case Down:
-		control->Move(0,-1); break;
-	case Right:
-		control->Move(1,0); break;
-	}
-}
-void UsbCamera::endMove()
-{
-	if(cameraFound)
-		moveTimer->stop();
-}
+
 bool UsbCamera::Enabled()
 {
 	return cameraFound;
@@ -99,5 +63,4 @@ bool UsbCamera::canRotate()
 UsbCamera::~UsbCamera()
 {
     cvReleaseCapture(&capture);
-//	delete control;
 }

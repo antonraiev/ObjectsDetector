@@ -1,6 +1,6 @@
 #include "VideoTab.h"
 #include <QtSql>
-#include "../camera/UsbCamera.h"
+#include "../camera/UsbRotatingCamera.h"
 #pragma comment(lib,"Control.lib")
 
 VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
@@ -91,23 +91,23 @@ void VideoTab::takeSnapshot()
 }
 void VideoTab::upCameraMove()
 {
-	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Up);
+	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Up);
 }
 void VideoTab::downCameraMove()
 {
-	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Down);
+	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Down);
 }
 void VideoTab::leftCameraMove()
 {
-	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Left);
+	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Left);
 }
 void VideoTab::rightCameraMove()
 {
-	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Right);
+	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Right);
 }
 void VideoTab::endCameraMove()
 {
-	dynamic_cast<UsbCamera*>(video->getCamera())->endMove();
+	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->endMove();
 }
 void VideoTab::paintEvent(QPaintEvent *ev)
 {

@@ -4,7 +4,6 @@
 
 class AbstractCamera : public QObject
 {
-	Q_OBJECT
 public:
 	virtual void setRenderWidget(QWidget *widget) = 0;
 	virtual bool Enabled() = 0;

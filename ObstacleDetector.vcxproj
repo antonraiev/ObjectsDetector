@@ -45,7 +45,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(ConfigurationName)</OutDir>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\bin\OpenCV\src\include\opencv;E:\bin\OpenCV\src\modules\nonfree\include;E:\bin\OpenCV\src\modules\video\include;E:\bin\OpenCV\src\modules\objdetect\include;E:\bin\OpenCV\src\modules\legacy\include;E:\bin\OpenCV\src\modules\imgproc\include;E:\bin\OpenCV\src\modules\highgui\include;E:\bin\OpenCV\src\modules\flann\include;E:\bin\OpenCV\src\modules\gpu\include;E:\bin\OpenCV\src\modules\features2d\include;E:\bin\OpenCV\src\modules\core\include;E:\bin\OpenCV\src\modules\calib3d\include;E:\bin\OpenCV\src\3rdparty\include;E:\Projects\ObstacleDetector\Control;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\bin\OpenCV\lib\Release;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\bin\OpenCV\src\include\opencv;E:\bin\OpenCV\src\modules\nonfree\include;E:\bin\OpenCV\src\modules\video\include;E:\bin\OpenCV\src\modules\objdetect\include;E:\bin\OpenCV\src\modules\legacy\include;E:\bin\OpenCV\src\modules\imgproc\include;E:\bin\OpenCV\src\modules\highgui\include;E:\bin\OpenCV\src\modules\flann\include;E:\bin\OpenCV\src\modules\gpu\include;E:\bin\OpenCV\src\modules\features2d\include;E:\bin\OpenCV\src\modules\core\include;E:\bin\OpenCV\src\modules\calib3d\include;E:\bin\OpenCV\src\3rdparty\include;E:\Projects\ObstacleDetector\Control;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\bin\OpenCV\src\include\opencv;E:\bin\OpenCV\src\modules\nonfree\include;E:\bin\OpenCV\src\modules\video\include;E:\bin\OpenCV\src\modules\objdetect\include;E:\bin\OpenCV\src\modules\legacy\include;E:\bin\OpenCV\src\modules\imgproc\include;E:\bin\OpenCV\src\modules\highgui\include;E:\bin\OpenCV\src\modules\flann\include;E:\bin\OpenCV\src\modules\gpu\include;E:\bin\OpenCV\src\modules\features2d\include;E:\bin\OpenCV\src\modules\core\include;E:\bin\OpenCV\src\modules\calib3d\include;E:\bin\OpenCVEx\include;E:\bin\OpenCV\src\3rdparty\include;E:\Projects\ObstacleDetector\Control;$(IncludePath)</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\bin\OpenCV\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -93,6 +93,9 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_SnapshotTab.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_UsbRotatingCamera.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_VideoTab.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -100,6 +103,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_SnapshotTab.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_UsbRotatingCamera.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_VideoTab.cpp">
@@ -111,11 +117,9 @@
     <ClCompile Include="camera\UsbCamera.cpp" />
     <ClCompile Include="cv\CvSIFT.cpp" />
     <ClCompile Include="cv\CvSURF.cpp" />
+    <ClCompile Include="camera\IPCamera.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="tabs\DbTab.cpp" />
-    <ClCompile Include="GeneratedFiles\Debug\moc_AbstractCamera.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_AddChangeDescrDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -146,17 +150,11 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_SnapshotsDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_UsbCamera.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_resources.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_AbstractCamera.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_AddChangeDescrDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -188,11 +186,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SnapshotsDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_UsbCamera.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tabs\MapTab.cpp" />
+    <ClCompile Include="camera\UsbRotatingCamera.cpp" />
     <ClCompile Include="views\ObjectView.cpp" />
     <ClCompile Include="views\QGraphicsSnapShotItem.cpp" />
     <ClCompile Include="cv\QtOpenCV.cpp" />
@@ -242,14 +238,20 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="camera\UsbCamera.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing UsbCamera.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing UsbCamera.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -299,14 +301,20 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
     </CustomBuild>
     <CustomBuild Include="camera\AbstractCamera.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing AbstractCamera.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing AbstractCamera.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </Command>
     </CustomBuild>
     <ClInclude Include="cv\CvSIFT.h" />
     <ClInclude Include="cv\CvSURF.h" />
@@ -355,6 +363,7 @@
     <ClInclude Include="database\DatabaseModel.h" />
     <ClInclude Include="database\QModelIndexListHack.h" />
     <ClInclude Include="database\Structs.h" />
+    <ClInclude Include="camera\IPCamera.h" />
     <ClInclude Include="resource.h" />
     <CustomBuild Include="tabs\SceneTab.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -375,6 +384,16 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ScenesDialog.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE  "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
+    </CustomBuild>
+    <CustomBuild Include="camera\UsbRotatingCamera.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing UsbRotatingCamera.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing UsbRotatingCamera.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
     </CustomBuild>
     <ClInclude Include="views\SlidesView.h" />
     <CustomBuild Include="dialogs\SnapshotsDialog.h">
