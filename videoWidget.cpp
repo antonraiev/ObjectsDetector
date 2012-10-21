@@ -1,26 +1,27 @@
 #include "videoWidget.h"
-
+#include "UsbCamera.h"
 videoWidget::videoWidget(QWidget *parent)
 	: QLabel(parent)
 {
-	m_camera.setRenderWidget(this);
-	m_camera.Run();
+	camera = new UsbCamera();
+	camera->setRenderWidget(this);
+	camera->Run();
 }
 void videoWidget::paintEvent(QPaintEvent *ev)
 {
-	m_camera.Render();
-	this->setMaximumSize(m_camera.getVideoDimensions());
+	camera->Render();
+	this->setMaximumSize(camera->getVideoDimensions());
 	QWidget::paintEvent(ev);
 }
 void videoWidget::resizeEvent(QResizeEvent *ev)
 {
 	QWidget::resizeEvent(ev);
 }
-Camera& videoWidget::camera()
+AbstractCamera* videoWidget::getCamera()
 {
-	return m_camera;
+	return camera;
 }
 videoWidget::~videoWidget()
 {
-
+	delete camera;
 }

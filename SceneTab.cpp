@@ -28,6 +28,7 @@ void SceneTab::addScene(int id)
 	scene->clear();
 	mapPoints.clear();
 	scene->addPixmap(currentScene.pixmap);
+	scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
 }
 void SceneTab::setDatabase(Database &db)
 {
@@ -49,29 +50,38 @@ void SceneTab::findObjects()
 	db->connect();
 	QList<Object> objects = db->getObjects();
 	db->disconnect();
+	sift.setScene(currentScene.pixmap.toImage());
 	foreach(Object object, objects)
 	{
 		QPixmap pixmap = QPixmap::fromImage(object.object);
-		QPoint *points = new QPoint[4];
-		if(!surf.compare(&currentScene.pixmap, &pixmap, points))
+//		QPoint *points = new QPoint[4];
+		QGraphicsRectItem *rectItem;
+//		if(!surf.compare(&currentScene.pixmap, &pixmap, points))
+		SiftResult result = sift.doSIFT(/*currentScene.pixmap.toImage(), */pixmap.toImage());
+		if(result.isHomographyFound)
 		{
 			QPen pen;
 			if(object.descr.id == ROBOT_ID)
 				pen.setColor(Qt::green);
 			else
 				pen.setColor(Qt::red);
-			for(int i=0; i<4; i++)
-				scene->addLine(points[i].x(), points[i].y(), points[(i+1)%4].x(), points[(i+1)%4].y(), pen);
-
-			QPoint min = QPoint(1000, 1000), max=QPoint(0, 0);
-			for(int i=0; i<4; i++)
-			{
-				if(sqrt(pow(points[i].x(), 2.) + pow(points[i].y(), 2.)) < sqrt(pow(min.x(), 2.) + pow(min.y(), 2.)) ) 
-					min=points[i];
-				if(sqrt(pow(points[i].x(), 2.) + pow(points[i].y(), 2.)) > sqrt(pow(max.x(), 2.) + pow(max.y(), 2.)) ) 
-					max=points[i];
-			}
-
+			result.rectItem->setPen(pen);
+			QRectF rectf = result.rectItem->rect();
+			scene->addItem(result.rectItem);
+//			for(int i=0; i<4; i++)
+//				scene->addLine(points[i].x(), points[i].y(), points[(i+1)%4].x(), points[(i+1)%4].y(), pen);
+			
+			//QPoint min = QPoint(1000, 1000), max=QPoint(0, 0);
+			//for(int i=0; i<4; i++)
+			//{
+			//	if(sqrt(pow(points[i].x(), 2.) + pow(points[i].y(), 2.)) < sqrt(pow(min.x(), 2.) + pow(min.y(), 2.)) ) 
+			//		min=points[i];
+			//	if(sqrt(pow(points[i].x(), 2.) + pow(points[i].y(), 2.)) > sqrt(pow(max.x(), 2.) + pow(max.y(), 2.)) ) 
+			//		max=points[i];
+			//}
+			QPointF topLeft = result.rectItem->scenePos();
+			QPoint min = QPoint(topLeft.x(), topLeft.y()), 
+				   max = QPoint(topLeft.x() + result.rectItem->rect().width(), topLeft.y() + result.rectItem->rect().height());
 			QRect rect(min, max);
 			mapPoints.insert(make_pair(object.descr.id == ROBOT_ID, rect));
 			if(object.descr.id == ROBOT_ID)
@@ -80,13 +90,13 @@ void SceneTab::findObjects()
 				robotHeightSm = object.phys_height;
 			}
 		}
-		delete[] points;
+		//delete[] points;
 	}
 	setCursor(Qt::ArrowCursor);
 }
 void SceneTab::buildMap()
 {
-	scene->clear();
+//	scene->clear();
 	double scale = robotHeightPx / robotHeightSm;
 	for(multimap<bool, QRect>::iterator it = mapPoints.begin(); it!=mapPoints.end(); it++)
 	{
@@ -104,8 +114,16 @@ void SceneTab::buildMap()
 		if(objectRect.y() / scale + objectRect.height() / scale > maxY)
 			maxY = objectRect.y() / scale + objectRect.height() / scale;
 	}
+//	scenePixmap=scene.grabWidget(sceneView,QRect(min,max));
+scene->clearSelection();                                                  // Selections would also render to the file
+scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
+QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);  // Create the image with the exact size of the shrunk scene
+image.fill(Qt::transparent);                                              // Start all pixels transparent
 
-	QPixmap pixmap = QPixmap::grabWidget(sceneView, 0, 0, maxX, maxY);
+QPainter painter(&image);
+scene->render(&painter);
+QPixmap pixmap = QPixmap::fromImage(image);
+//	QPixmap pixmap = QPixmap::grabWidget(sceneView, 0, 0, maxX, maxY);
 	db->connect();
 	int mapId = db->addMap(pixmap);
 	db->disconnect();

@@ -1,4 +1,5 @@
 #include "SnapshotsDialog.h"
+#include "QModelIndexListHack.h"
 SnapshotsDialog::SnapshotsDialog(QWidget *parent)
 	: QDialog(parent)
 {
@@ -29,7 +30,7 @@ int SnapshotsDialog::exec()
 void SnapshotsDialog::selectionChanged()
 {
 	selectedId.clear();
-	QModelIndexList list=table->selectionModel()->selectedRows();
+	QModelIndexList list = selectedIndexes(table);
 	for(int i=0; i<list.count(); i++)
 	{
 		selectedId.push_back(table->item(list.at(i).row(),5)->data(Qt::DisplayRole).toInt());

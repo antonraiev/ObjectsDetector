@@ -1,6 +1,7 @@
 #include "snapShotTab.h"
 #include "QGraphicsSnapShotItem.h"
 #include "SnapshotsDialog.h"
+#include "ScenesDialog.h"
 #include "DatabaseModel.h"
 snapShotTab::snapShotTab(QWidget *parent)
 	: QWidget(parent)
@@ -26,15 +27,26 @@ snapShotTab::snapShotTab(QWidget *parent)
 	QPushButton *addSnapButton=new QPushButton("Добавить снимок...");
 	connect(addSnapButton,SIGNAL(clicked()),SLOT(runSnapshotsDialog()));
 	buttonsLayout->addWidget(addSnapButton);
+
+	QPushButton *loadSceneButton=new QPushButton("Загрузить сцену");
+	connect(loadSceneButton,SIGNAL(clicked()),SLOT(runScenesDialog()));
+	buttonsLayout->addWidget(loadSceneButton);
+
+	QPushButton *sceneBoundsButton=new QPushButton("Пересчитать границы");
+	connect(sceneBoundsButton,SIGNAL(clicked()),SLOT(resizeSceneBounds()));
+	buttonsLayout->addWidget(sceneBoundsButton);
+
 	QPushButton *fixSceneButton=new QPushButton("Фиксировать сцену");
 	connect(fixSceneButton,SIGNAL(clicked()),SLOT(fixScene()));
 	buttonsLayout->addWidget(fixSceneButton);
+
 	QPushButton *clearButton=new QPushButton("Очистить");
 	QMenu *clearMenu=new QMenu(clearButton);
 	clearMenu->addAction("Сцену",this,SLOT(clearScene()));
 	clearMenu->addAction("Список",this,SLOT(clearSlidesList()));
 	clearMenu->addAction("Все",this,SLOT(clearAll()));
 	clearButton->setMenu(clearMenu);
+
 	buttonsLayout->addWidget(clearButton);
 	mainLayout->addLayout(buttonsLayout);
 
@@ -170,6 +182,32 @@ void snapShotTab::addScenePart(int n)
 	scene->addItem(item);
 	item->setFlags(QGraphicsItem::ItemIsMovable);
 }
+
+void snapShotTab::runScenesDialog()
+{
+	ScenesDialog *dialog=new ScenesDialog(this);
+	DatabaseModel dbModel;
+	dbModel.setDatabase(*db);
+	dialog->setDbModel(dbModel);
+	int result=dialog->exec();
+	if(result==QDialog::Accepted)
+		addScene(dialog->selectedSceneId());
+}
+
+void snapShotTab::addScene(int id)
+{
+	db->connect();
+	Scene curScene=db->getScene(id);
+	db->disconnect();
+	scene->clear();
+	scene->addPixmap(curScene.pixmap);
+	scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
+}
+
+void snapShotTab::resizeSceneBounds()
+{
+	scene->setSceneRect(scene->itemsBoundingRect());
+}
 void snapShotTab::fixScene()
 {
 	QPoint min=QPoint(INT_MAX,INT_MAX),max=QPoint(0,0);
@@ -180,10 +218,19 @@ void snapShotTab::fixScene()
 		if((item->scenePos().x()+item->boundingRect().width())>=max.x() && (item->scenePos().y()+item->boundingRect().height())>=max.y())
 			max=QPoint(item->scenePos().x()+item->boundingRect().width(),item->scenePos().y()+item->boundingRect().height());
 	}
-	QPixmap scene=QPixmap();
-	scene=scene.grabWidget(sceneView,QRect(min,max));
+	QPixmap scenePixmap=QPixmap();
+
+//	scenePixmap=scene.grabWidget(sceneView,QRect(min,max));
+scene->clearSelection();                                                  // Selections would also render to the file
+scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
+QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);  // Create the image with the exact size of the shrunk scene
+image.fill(Qt::transparent);                                              // Start all pixels transparent
+
+QPainter painter(&image);
+scene->render(&painter);
+scenePixmap = QPixmap::fromImage(image);
 	db->connect();
-	int sceneId=db->addScene(scene);
+	int sceneId=db->addScene(scenePixmap);
 	foreach(int snapshot_id,parts)
 	{
 		db->addPart(sceneId,snapshot_id);

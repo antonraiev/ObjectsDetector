@@ -4,7 +4,7 @@
 Database::Database(void)
 {
 	db=QSqlDatabase::addDatabase("QODBC3");
-	db.setDatabaseName("Driver={SQL Server Native Client 10.0};Server=NOTEBOOK;"\
+	db.setDatabaseName("Driver={SQL Server Native Client 10.0};Server=ASPIRE-5738\\SQLEXPRESS;"\
 		"Database=ObstacleDetectorDB;Trusted_Connection=yes;");
 }
 bool Database::connect()

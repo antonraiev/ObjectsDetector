@@ -2,11 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QtGui>
-#include "MeasureUnit.h"
-#include "VideoSource.h"
-#include "Controller.h"
+//#include "MeasureUnit.h"
+//#include "VideoSource.h"
+//#include "Controller.h"
 #include "CMControl.h"
-#include "camera.h"
+#include "AbstractCamera.h"
 #include "videoWidget.h"
 #include "Database.h"
 class videoTab : public QWidget

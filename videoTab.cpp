@@ -1,12 +1,13 @@
 #include "videoTab.h"
 #include <QtSql>
+#include "UsbCamera.h"
 #pragma comment(lib,"Control.lib")
-#pragma comment(lib,"BaseClasses.lib")
+
 videoTab::videoTab(QWidget *parent, Qt::WFlags flags)
 	: QWidget(parent, flags)
 {
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("Windows-1251")); 
-	video=new videoWidget();
+	video = new videoWidget();
 	QTimer* videoTimer = new QTimer(this);
 	connect(videoTimer, SIGNAL(timeout()), video, SLOT(repaint()));
 	videoTimer->setInterval(10);
@@ -36,11 +37,10 @@ videoTab::videoTab(QWidget *parent, Qt::WFlags flags)
 	QGroupBox *controlGroup=new QGroupBox("Управление поворотами:");
 	controlGroup->setLayout(gridArrows);
 	connect(snap,SIGNAL(clicked()),SLOT(takeSnapshot()));
-	bool cameraEnabled=video->camera().Enabled();
+	bool canRotate = video->getCamera()->canRotate();
 	//cameraEnabled=true;//Debug!!
-	if(!cameraEnabled)
+	if(!canRotate)
 	{
-		snap->setEnabled(false);
 		leftArrow->setEnabled(false);
 		topArrow->setEnabled(false);
 		bottomArrow->setEnabled(false);
@@ -49,12 +49,13 @@ videoTab::videoTab(QWidget *parent, Qt::WFlags flags)
 	QGridLayout *mainLayout=new QGridLayout();
 	QGridLayout *externLayout=new QGridLayout();
 	QVBoxLayout *videoLayout=new QVBoxLayout();
-	if(cameraEnabled)
+	if(video->getCamera()->Enabled())
 	{
 		videoLayout->addWidget(video);
 	}
 	else
 	{
+		snap->setEnabled(false);
 		QLabel *noVideo=new QLabel();
 		QPalette palette;
 		palette.setBrush(noVideo->backgroundRole(),QBrush(Qt::black));
@@ -73,40 +74,40 @@ videoTab::videoTab(QWidget *parent, Qt::WFlags flags)
 }
 void videoTab::setDatabase(Database &db)
 {
-	this->db=&db;
+	this->db = &db;
 }
 void videoTab::takeSnapshot()
 {
 	QSound sound("Resources/snapshot.wav");
 	sound.play();
 	QPixmap pixmap;
-	pixmap=pixmap.grabWidget(video);
+	pixmap = pixmap.grabWidget(video);
 	db->connect();
-	int id=db->addSnapshot(pixmap);
-	if(id==-1)
+	int id = db->addSnapshot(pixmap);
+	if(id == -1)
 		QMessageBox::warning(0,"Ошибка","Ошибка при сохранении снимка в БД");
 	else emit snapshotAdded(id);
 	db->disconnect();
 }
 void videoTab::upCameraMove()
 {
-	video->camera().beginMove(Camera::Up);
+	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Up);
 }
 void videoTab::downCameraMove()
 {
-	video->camera().beginMove(Camera::Down);
+	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Down);
 }
 void videoTab::leftCameraMove()
 {
-	video->camera().beginMove(Camera::Left);
+	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Left);
 }
 void videoTab::rightCameraMove()
 {
-	video->camera().beginMove(Camera::Right);
+	dynamic_cast<UsbCamera*>(video->getCamera())->beginMove(UsbCamera::Right);
 }
 void videoTab::endCameraMove()
 {
-	video->camera().endMove();
+	dynamic_cast<UsbCamera*>(video->getCamera())->endMove();
 }
 void videoTab::paintEvent(QPaintEvent *ev)
 {

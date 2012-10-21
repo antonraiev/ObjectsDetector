@@ -18,11 +18,14 @@ public:
 	void setDatabase(Database &db);
 public slots:
 	void addSlide(int id);
+	void addScene(int id);
 	void drawSlides(int n);
 	void moveSlidesRight();
 	void moveSlidesLeft();
 	void runSnapshotsDialog();
     void addScenePart(int n);
+	void runScenesDialog();
+	void resizeSceneBounds();
 	void fixScene();
 	void clearScene();
 	void clearSlidesList();

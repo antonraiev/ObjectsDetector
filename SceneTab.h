@@ -3,6 +3,7 @@
 #include <QtGui>
 #include "Database.h"
 #include "CvSURF.h"
+#include "CvSIFT.h"
 class SceneTab : public QWidget
 {
 	Q_OBJECT
@@ -21,6 +22,7 @@ protected:
 	virtual void resizeEvent(QResizeEvent *ev);
 private:
 	CvSURF surf;
+	CvSIFT sift;
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
 	Scene currentScene;

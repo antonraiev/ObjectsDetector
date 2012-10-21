@@ -2,6 +2,9 @@
 #define MAPTAB_H
 #include <QtGui>
 #include "Database.h"
+#include <qabstractsocket.h>
+#include <qtcpsocket.h>
+
 class MapTab : public QWidget
 {
 	Q_OBJECT
@@ -13,6 +16,9 @@ public slots:
 	void setDatabase(Database &db);
 	void runMapsDialog();
 	void saveMapToFile();
+	void sendToKate();
+	void connectedToKate();
+	void errorToKate(QAbstractSocket::SocketError error);
 protected:
 	virtual void resizeEvent(QResizeEvent *ev);
 private:
@@ -21,6 +27,7 @@ private:
 	Map currentMap;
 	Database *db;
 	QGridLayout *mainLayout;
+	QTcpSocket *kateSocket;
 };
 
 #endif // MAPTAB_H

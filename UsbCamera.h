@@ -1,36 +1,36 @@
 #pragma once
 #include <QtGui>
-#pragma comment(lib,"Control.lib")
-#pragma comment(lib,"BaseClasses.lib")
-#include "MeasureUnit.h"
-#include "VideoSource.h"
-#include "Controller.h"
+#include "CvSURF.h"
 #include "CMControl.h"
-class Camera : public QObject
+#include "AbstractCamera.h"
+
+class UsbCamera : public AbstractCamera
 {
 	Q_OBJECT
 public:
 	enum Direction{Right,Left,Up,Down};
-	Camera(void);
+	UsbCamera(void);
 	void setRenderWidget(QWidget *widget);
 	bool Enabled();
 	bool Run();
 	void beginMove(Direction direction);
 	void endMove();
 	void Render();
+	bool canRotate();
 	QSize getVideoDimensions();
-	~Camera();
+	~UsbCamera();
 protected slots:
 	void moveOnTimer();
 private:
-	static const int defHeight=25;
-	static const int defWidth=25;
-	CMeasureUnit *unit;
-	CCameraVSource camera;
+	static const int defHeight = 0;
+	static const int defWidth = 0;
+	CvCapture *capture;
+	IplImage *frame;
 	CMControl *control;
 	QTimer *moveTimer;
 	Direction moveDirection;
 	QWidget *videoWidget;
 	bool cameraFound;
+	bool rotateControl;
 	QSize dimensions;
 };

@@ -1,6 +1,7 @@
 #include "DbTab.h"
 #include "AddChangeDescrDialog.h"
 #include "AddObjectDialog.h"
+#include "QModelIndexListHack.h"
 DbTab::DbTab(Database &db,QWidget *parent)
 	: QWidget(parent)
 {
@@ -125,7 +126,7 @@ void DbTab::changeButtonPressed()
 }
 void DbTab::delButtonPressed()
 {
-	QModelIndexList list=table->selectionModel()->selectedRows();
+	QModelIndexList list = selectedIndexes(table);
 	db->connect();
 	if(table==tables[0].second)
 	{
@@ -153,6 +154,7 @@ void DbTab::delButtonPressed()
 			if(id == ROBOT_ID)
 			{
 				QMessageBox::warning(this, "Ошибка", "Робот не может быть удален", QMessageBox::Ok);
+				db->disconnect();
 				return;
 			}
 			db->deleteDescription(id);

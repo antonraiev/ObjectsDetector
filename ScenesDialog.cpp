@@ -1,4 +1,5 @@
 #include "ScenesDialog.h"
+#include "QModelIndexListHack.h"
 
 ScenesDialog::ScenesDialog(QWidget *parent)
 	: QDialog(parent)
@@ -29,7 +30,7 @@ int ScenesDialog::exec()
 }
 void ScenesDialog::selectionChanged()
 {
-	selectedId=table->item(table->selectionModel()->selectedRows().at(0).row(),5)->data(Qt::DisplayRole).toInt();
+	selectedId=table->item(selectedIndexes(table).at(0).row(),5)->data(Qt::DisplayRole).toInt();
 }
 int ScenesDialog::selectedSceneId()
 {
