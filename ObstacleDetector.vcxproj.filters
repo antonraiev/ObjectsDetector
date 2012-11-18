@@ -43,6 +43,9 @@
     <Filter Include="views">
       <UniqueIdentifier>{c8443830-2f29-48ef-8a2c-5fe9ba265407}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fuzzy">
+      <UniqueIdentifier>{57d4ec5d-4e68-44af-b68e-485785595b1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_MainWindow.cpp">
@@ -200,6 +203,18 @@
     <ClCompile Include="camera\IPCamera.cpp">
       <Filter>camera</Filter>
     </ClCompile>
+    <ClCompile Include="fuzzy\FuzzyGrid.cpp">
+      <Filter>fuzzy</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_FuzzyGrid.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_FuzzyGrid.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="DbException.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="resources.qrc">
@@ -251,6 +266,9 @@
     <CustomBuild Include="camera\UsbRotatingCamera.h">
       <Filter>camera</Filter>
     </CustomBuild>
+    <CustomBuild Include="fuzzy\FuzzyGrid.h">
+      <Filter>fuzzy</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="database\Database.h">
@@ -280,6 +298,9 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="camera\IPCamera.h">
       <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="DbException.h">
+      <Filter>database</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

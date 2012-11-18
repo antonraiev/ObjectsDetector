@@ -2,6 +2,7 @@
 #define MAPTAB_H
 #include <QtGui>
 #include "../database/Database.h"
+#include "../fuzzy/FuzzyGrid.h"
 #include <qabstractsocket.h>
 #include <qtcpsocket.h>
 
@@ -21,11 +22,14 @@ public slots:
 	void errorToKate(QAbstractSocket::SocketError error);
 protected:
 	virtual void resizeEvent(QResizeEvent *ev);
+	virtual void wheelEvent(QWheelEvent *ev);
+	virtual void keyPressEvent(QKeyEvent *ev);
 private:
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
 	Map currentMap;
 	Database *db;
+	FuzzyGrid *fuzzyGrid;
 	QGridLayout *mainLayout;
 	QTcpSocket *kateSocket;
 };

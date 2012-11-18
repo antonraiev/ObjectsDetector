@@ -68,13 +68,13 @@ void DbTab::addButtonPressed()
 		int result=dialog->exec();
 		if(result==QDialog::Accepted)
 		{
-			db->connect();
+			
 			db->addDescription(dialog->name(),dialog->description());
 			delete tables[2].second;
 			tables[2].second=dbModel.descriptionsTable();
 			mainLayout->addWidget(tables[2].second,1,1,5,5);
 			table=tables[2].second;
-			db->disconnect();
+			
 		}
 	}
 	if(table==tables[3].second)
@@ -85,9 +85,9 @@ void DbTab::addButtonPressed()
 		if(result==QDialog::Accepted)
 		{
 			QPixmap object=dialog->object();
-			db->connect();
+			
 			db->addObject(dialog->nameId(),dialog->object(),dialog->physHeight());
-			db->disconnect();
+			
 			delete tables[3].second;
 			tables[3].second=dbModel.objectsTable();
 			mainLayout->addWidget(tables[3].second,1,1,5,5);
@@ -109,9 +109,9 @@ void DbTab::changeButtonPressed()
 			description.name=dialog->name();
 			description.description=dialog->description();
 			description.id=table->item(table->currentRow(),2)->data(Qt::DisplayRole).toInt();
-			db->connect();
+			
 			db->changeDescription(description);
-			db->disconnect();
+			
 			reloadTable(2);
 		}
 	}
@@ -127,7 +127,7 @@ void DbTab::changeButtonPressed()
 void DbTab::delButtonPressed()
 {
 	QModelIndexList list = selectedIndexes(table);
-	db->connect();
+	
 	if(table==tables[0].second)
 	{
 		for(int i=0; i<list.count(); i++)
@@ -154,7 +154,7 @@ void DbTab::delButtonPressed()
 			if(id == ROBOT_ID)
 			{
 				QMessageBox::warning(this, "Ошибка", "Робот не может быть удален", QMessageBox::Ok);
-				db->disconnect();
+				
 				return;
 			}
 			db->deleteDescription(id);
@@ -170,13 +170,13 @@ void DbTab::delButtonPressed()
 		}
 		reloadTable(3);
 	}
-	db->disconnect();
+	
 }
 void DbTab::reloadTable(int pos)
 {
 	if(pos==-1)
 		pos=tableBox->currentIndex();
-	db->connect();
+	
 	delete tables[pos].second;
 	if(pos==0)
 	{
@@ -196,7 +196,7 @@ void DbTab::reloadTable(int pos)
 	}
 	mainLayout->addWidget(tables[pos].second,1,1,5,5);
 	table=tables[pos].second;
-	db->disconnect();
+	
 }
 DbTab::~DbTab()
 {

@@ -82,12 +82,12 @@ void VideoTab::takeSnapshot()
 	sound.play();
 	QPixmap pixmap;
 	pixmap = pixmap.grabWidget(video);
-	db->connect();
+	
 	int id = db->addSnapshot(pixmap);
 	if(id == -1)
 		QMessageBox::warning(0,"Ошибка","Ошибка при сохранении снимка в БД");
 	else emit snapshotAdded(id);
-	db->disconnect();
+	
 }
 void VideoTab::upCameraMove()
 {

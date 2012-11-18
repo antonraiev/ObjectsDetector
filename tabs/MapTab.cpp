@@ -23,13 +23,36 @@ MapTab::MapTab(QWidget *parent)
 	QPushButton *findButton=new QPushButton("Сохранить в файл...");
 	connect(findButton,SIGNAL(clicked()),SLOT(saveMapToFile()));
 	mainLayout->addWidget(findButton,8,2,1,1);
+
+	fuzzyGrid = new FuzzyGrid(scene);
+	QGroupBox *fuzzyControls = new QGroupBox("Нечеткая логика:");	
+	QGridLayout *fuzzyLayout = new QGridLayout();
+	QCheckBox *showGridBox = new QCheckBox("Отображать сетку");
+	connect(showGridBox, SIGNAL(stateChanged(int)), fuzzyGrid, SLOT(showGrid(int)));
+	fuzzyLayout->addWidget(showGridBox, 0, 0, 1, 1);
+	QLabel *gridSizeLabel = new QLabel("Размер сетки:");
+	fuzzyLayout->addWidget(gridSizeLabel, 1, 0, 1, 1);
+	QRadioButton *oneSize = new QRadioButton("1");
+	QRadioButton *twoSize = new QRadioButton("2");
+	QRadioButton *fourSize = new QRadioButton("4");
+	oneSize->setChecked(true);
+	fuzzyLayout->addWidget(oneSize, 2, 0, 1, 1);
+	fuzzyLayout->addWidget(twoSize, 3, 0, 1, 1);
+	fuzzyLayout->addWidget(fourSize, 4, 0, 1, 1);
+	QPushButton *calcButton = new QPushButton("Выполнить расчет");
+	connect(calcButton, SIGNAL(clicked()), fuzzyGrid, SLOT(doCalculations()));
+	fuzzyLayout->addWidget(calcButton, 5, 0, 1, 1);
+	
+	fuzzyControls->setLayout(fuzzyLayout);
+
+	mainLayout->addWidget(fuzzyControls, 0, 3, 1, 1);
 	setLayout(mainLayout);
 }
 void MapTab::addMap(int id)
 {
-	db->connect();
+	
 	currentMap = db->getMap(id);
-	db->disconnect();
+	
 	scene->clear();
 	scene->addPixmap(QPixmap::fromImage(currentMap.image));
 }
@@ -118,6 +141,26 @@ void MapTab::resizeEvent(QResizeEvent *ev)
 {
 	scene->setSceneRect(sceneView->rect());
 	QWidget::resizeEvent(ev);
+}
+
+void MapTab::wheelEvent(QWheelEvent *ev)
+{
+	double scaleStep = ev->delta() / 120;
+	sceneView->scale(scaleStep, scaleStep);
+}
+
+void MapTab::keyPressEvent(QKeyEvent *ev)
+{
+	if(ev->key() == Qt::Key_Plus)
+	{
+		sceneView->scale(1.2, 1.2);
+		scene->setSceneRect(scene->itemsBoundingRect());
+	}
+	else if(ev->key() == Qt::Key_Minus)
+	{
+		sceneView->scale(0.8, 0.8);
+		scene->setSceneRect(scene->itemsBoundingRect());
+	}
 }
 MapTab::~MapTab()
 {

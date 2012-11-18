@@ -56,9 +56,9 @@ void AddObjectDialog::fromSceneButtonPressed()
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 	{
-		db->connect();
+		
 		QPixmap pixmap=db->getScene(dialog->selectedSceneId()).pixmap;
-		db->disconnect();
+		
 		scene->clear();
 		scene->addPixmap(pixmap);
 	}
@@ -72,9 +72,9 @@ void AddObjectDialog::fromSnapshotButtonPressed()
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 	{
-		db->connect();
+		
 		QPixmap pixmap=QPixmap::fromImage(db->getSnapshot(dialog->selectedIdentifiers()[0]).image);
-		db->disconnect();
+		
 		scene->clear();
 		scene->addPixmap(pixmap);
 	}
@@ -112,9 +112,9 @@ int AddObjectDialog::physHeight()
 }
 int AddObjectDialog::exec()
 {
-	db->connect();
+	
 	descriptions=db->getDescriptions();
-	db->disconnect();
+	
 	foreach(Description descr,descriptions)
 	{
 		objNames->addItem(descr.name);

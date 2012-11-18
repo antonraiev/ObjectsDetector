@@ -10,9 +10,9 @@ void DatabaseModel::setDatabase(Database &db)
 }
 QTableWidget* DatabaseModel::snapshotsTable()
 {
-	db->connect();
+	
 	QList<Snapshot> snapslist=db->getSnapshots();
-	db->disconnect();
+	
 	QTableWidget *table;
 	const QSize previewSize=QSize(64,64);
 	table=new QTableWidget(snapslist.count(),6);
@@ -39,9 +39,9 @@ QTableWidget* DatabaseModel::snapshotsTable()
 }
 QTableWidget* DatabaseModel::scenesTable()
 {
-	db->connect();
+	
 	QList<Scene> sceneslist=db->getScenes();
-	db->disconnect();
+	
 	QTableWidget *table;
 	const QSize previewSize=QSize(128,96);
 	table=new QTableWidget(sceneslist.count(),6);
@@ -69,9 +69,9 @@ QTableWidget* DatabaseModel::scenesTable()
 }
 QTableWidget* DatabaseModel::objectsTable()
 {
-	db->connect();
+	
 	QList<Object> objlist=db->getObjects();
-	db->disconnect();
+	
 	QTableWidget *table;
 	const QSize previewSize=QSize(64,64);
 	table=new QTableWidget(objlist.count(),5);
@@ -97,9 +97,9 @@ QTableWidget* DatabaseModel::objectsTable()
 }
 QTableWidget* DatabaseModel::descriptionsTable()
 {
-	db->connect();
+	
 	QList<Description> descrlist=db->getDescriptions();
-	db->disconnect();
+	
 	QTableWidget *table;
 	table=new QTableWidget(descrlist.count(),3);
 	table->setHorizontalHeaderLabels(QStringList()<<"Название"<<"Описание"<<"hidden");

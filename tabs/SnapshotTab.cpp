@@ -139,9 +139,9 @@ void SnapshotTab::setDatabase(Database &db)
 }
 void SnapshotTab::addSlide(int id)
 {
-	db->connect();
+	
 	Snapshot snapshot=db->getSnapshot(id);
-	db->disconnect();
+	
 	QGraphicsSnapShotItem *slide=new QGraphicsSnapShotItem();
 	slide->setPixmap(QPixmap().fromImage(snapshot.image));
 	slide->setId(id);
@@ -175,9 +175,9 @@ void SnapshotTab::drawSlides(int n)
 }
 void SnapshotTab::addScenePart(int n)
 {
-	db->connect();
+	
 	QGraphicsPixmapItem *item=new QGraphicsPixmapItem(QPixmap::fromImage(db->getSnapshot(n).image));
-	db->disconnect();
+	
 	parts.push_back(n);
 	scene->addItem(item);
 	item->setFlags(QGraphicsItem::ItemIsMovable);
@@ -196,9 +196,9 @@ void SnapshotTab::runScenesDialog()
 
 void SnapshotTab::addScene(int id)
 {
-	db->connect();
+	
 	Scene curScene=db->getScene(id);
-	db->disconnect();
+	
 	scene->clear();
 	scene->addPixmap(curScene.pixmap);
 	scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
@@ -229,13 +229,13 @@ image.fill(Qt::transparent);                                              // Sta
 QPainter painter(&image);
 scene->render(&painter);
 scenePixmap = QPixmap::fromImage(image);
-	db->connect();
+	
 	int sceneId=db->addScene(scenePixmap);
 	foreach(int snapshot_id,parts)
 	{
 		db->addPart(sceneId,snapshot_id);
 	}
-	db->disconnect();
+	
 	//QLabel *lbl=new QLabel();
 	//lbl->setPixmap(scene);
 	//lbl->show();

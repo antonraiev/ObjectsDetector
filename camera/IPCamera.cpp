@@ -34,9 +34,11 @@ bool IPCamera::Run()
 	std::string videoStreamAddress = "http://192.168.0.20/video.cgi?.mjpg";
     if(!capture.open(videoStreamAddress)) 
 	{
-        return false;
+		cameraFound = false;
+        return cameraFound;
 	}
-	return true;
+	cameraFound = true;
+	return cameraFound;
 }
 
 void IPCamera::Render()

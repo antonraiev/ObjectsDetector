@@ -22,17 +22,18 @@ SceneTab::SceneTab(QWidget *parent)
 }
 void SceneTab::addScene(int id)
 {
-	db->connect();
+	
 	currentScene=db->getScene(id);
-	db->disconnect();
+	
 	scene->clear();
 	mapPoints.clear();
 	scene->addPixmap(currentScene.pixmap);
-	scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
+	// Re-shrink the scene to it's bounding contents
+	scene->setSceneRect(scene->itemsBoundingRect());                          
 }
 void SceneTab::setDatabase(Database &db)
 {
-	this->db=&db;
+	this->db = &db;
 }
 void SceneTab::runScenesDialog()
 {
@@ -47,9 +48,9 @@ void SceneTab::runScenesDialog()
 void SceneTab::findObjects()
 {
 	setCursor(Qt::WaitCursor);
-	db->connect();
+	
 	QList<Object> objects = db->getObjects();
-	db->disconnect();
+	
 	sift.setScene(currentScene.pixmap.toImage());
 	foreach(Object object, objects)
 	{
@@ -96,14 +97,16 @@ void SceneTab::findObjects()
 }
 void SceneTab::buildMap()
 {
-//	scene->clear();
+	QGraphicsScene *mapScene = new QGraphicsScene();
 	double scale = robotHeightPx / robotHeightSm;
 	for(multimap<bool, QRect>::iterator it = mapPoints.begin(); it!=mapPoints.end(); it++)
 	{
 		QRect objectRect = it->second;
 		bool isRobot = it->first;
-		scene->addRect(objectRect.x() / scale, objectRect.y() / scale, objectRect.width() / scale, objectRect.height() / scale,
-			isRobot ? QPen(Qt::green) : QPen(Qt::red), isRobot ? QBrush(Qt::green) : QBrush(Qt::red));
+		mapScene->addRect(objectRect.x() / scale, objectRect.y() / scale, 
+			objectRect.width() / scale, objectRect.height() / scale,
+			isRobot ? QPen(Qt::green) : QPen(Qt::red), 
+			isRobot ? QBrush(Qt::green) : QBrush(Qt::red));
 	}
 	int maxX = 0, maxY = 0;
 	for(multimap<bool, QRect>::iterator it = mapPoints.begin(); it!=mapPoints.end(); it++)
@@ -114,22 +117,23 @@ void SceneTab::buildMap()
 		if(objectRect.y() / scale + objectRect.height() / scale > maxY)
 			maxY = objectRect.y() / scale + objectRect.height() / scale;
 	}
-//	scenePixmap=scene.grabWidget(sceneView,QRect(min,max));
-scene->clearSelection();                                                  // Selections would also render to the file
-scene->setSceneRect(scene->itemsBoundingRect());                          // Re-shrink the scene to it's bounding contents
-QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);  // Create the image with the exact size of the shrunk scene
-image.fill(Qt::transparent);                                              // Start all pixels transparent
 
-QPainter painter(&image);
-scene->render(&painter);
-QPixmap pixmap = QPixmap::fromImage(image);
-//	QPixmap pixmap = QPixmap::grabWidget(sceneView, 0, 0, maxX, maxY);
-	db->connect();
+	// Selections would also render to the file
+	mapScene->clearSelection();
+	// Re-shrink the scene to it's bounding contents
+	mapScene->setSceneRect(scene->itemsBoundingRect());
+	// Create the image with the exact size of the shrunk scene
+	QImage image(mapScene->sceneRect().size().toSize(), QImage::Format_ARGB32);  
+	image.fill(Qt::transparent);                                              
+
+	QPainter painter(&image);
+	mapScene->render(&painter);
+	QPixmap pixmap = QPixmap::fromImage(image);
+	
 	int mapId = db->addMap(pixmap);
-	db->disconnect();
-	scene->clear();
-	scene->addPixmap(currentScene.pixmap);
+	
 	emit mapCreated(mapId);
+	delete mapScene;
 }
 void SceneTab::resizeEvent(QResizeEvent *ev)
 {
