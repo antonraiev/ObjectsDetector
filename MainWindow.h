@@ -21,7 +21,6 @@ private:
 	SceneTab *sceneTab;
 	MapTab *mapTab;
 	DbTab *dbTab;
-	Database db;
 };
 
 #endif // OBSTACLEDETECTOR_H

@@ -49,15 +49,14 @@ AddObjectDialog::AddObjectDialog(QWidget *parent,bool isAddDialog)
 }
 void AddObjectDialog::fromSceneButtonPressed()
 {
-	DatabaseModel model;
-	model.setDatabase(*db);
+	DatabaseView model;
 	ScenesDialog *dialog=new ScenesDialog(this);
 	dialog->setDbModel(model);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 	{
 		
-		QPixmap pixmap=db->getScene(dialog->selectedSceneId()).pixmap;
+		QPixmap pixmap=Database::getInstance().getScene(dialog->selectedSceneId()).pixmap;
 		
 		scene->clear();
 		scene->addPixmap(pixmap);
@@ -65,23 +64,18 @@ void AddObjectDialog::fromSceneButtonPressed()
 }
 void AddObjectDialog::fromSnapshotButtonPressed()
 {
-	DatabaseModel model;
-	model.setDatabase(*db);
+	DatabaseView model;
 	SnapshotsDialog *dialog=new SnapshotsDialog(this);
 	dialog->setDbModel(model);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 	{
 		
-		QPixmap pixmap=QPixmap::fromImage(db->getSnapshot(dialog->selectedIdentifiers()[0]).image);
+		QPixmap pixmap=QPixmap::fromImage(Database::getInstance().getSnapshot(dialog->selectedIdentifiers()[0]).image);
 		
 		scene->clear();
 		scene->addPixmap(pixmap);
 	}
-}
-void AddObjectDialog::setDatabase(Database &db)
-{
-	this->db=&db;
 }
 QPixmap AddObjectDialog::object()
 {
@@ -113,7 +107,7 @@ int AddObjectDialog::physHeight()
 int AddObjectDialog::exec()
 {
 	
-	descriptions=db->getDescriptions();
+	descriptions=Database::getInstance().getDescriptions();
 	
 	foreach(Description descr,descriptions)
 	{

@@ -123,9 +123,6 @@
     <ClCompile Include="database\Database.cpp">
       <Filter>database</Filter>
     </ClCompile>
-    <ClCompile Include="database\DatabaseModel.cpp">
-      <Filter>database</Filter>
-    </ClCompile>
     <ClCompile Include="database\QModelIndexListHack.cpp">
       <Filter>database</Filter>
     </ClCompile>
@@ -212,7 +209,10 @@
     <ClCompile Include="GeneratedFiles\Release\moc_FuzzyGrid.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="DbException.cpp">
+    <ClCompile Include="database\DbException.cpp">
+      <Filter>database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\DatabaseView.cpp">
       <Filter>database</Filter>
     </ClCompile>
   </ItemGroup>
@@ -274,9 +274,6 @@
     <ClInclude Include="database\Database.h">
       <Filter>database</Filter>
     </ClInclude>
-    <ClInclude Include="database\DatabaseModel.h">
-      <Filter>database</Filter>
-    </ClInclude>
     <ClInclude Include="database\Structs.h">
       <Filter>database</Filter>
     </ClInclude>
@@ -299,7 +296,10 @@
     <ClInclude Include="camera\IPCamera.h">
       <Filter>camera</Filter>
     </ClInclude>
-    <ClInclude Include="DbException.h">
+    <ClInclude Include="database\DbException.h">
+      <Filter>database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\DatabaseView.h">
       <Filter>database</Filter>
     </ClInclude>
   </ItemGroup>

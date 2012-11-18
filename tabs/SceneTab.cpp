@@ -23,7 +23,7 @@ SceneTab::SceneTab(QWidget *parent)
 void SceneTab::addScene(int id)
 {
 	
-	currentScene=db->getScene(id);
+	currentScene=Database::getInstance().getScene(id);
 	
 	scene->clear();
 	mapPoints.clear();
@@ -31,16 +31,12 @@ void SceneTab::addScene(int id)
 	// Re-shrink the scene to it's bounding contents
 	scene->setSceneRect(scene->itemsBoundingRect());                          
 }
-void SceneTab::setDatabase(Database &db)
-{
-	this->db = &db;
-}
+
 void SceneTab::runScenesDialog()
 {
 	ScenesDialog *dialog=new ScenesDialog(this);
-	DatabaseModel dbModel;
-	dbModel.setDatabase(*db);
-	dialog->setDbModel(dbModel);
+	DatabaseView dbView;
+	dialog->setDbModel(dbView);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 		addScene(dialog->selectedSceneId());
@@ -49,7 +45,7 @@ void SceneTab::findObjects()
 {
 	setCursor(Qt::WaitCursor);
 	
-	QList<Object> objects = db->getObjects();
+	QList<Object> objects = Database::getInstance().getObjects();
 	
 	sift.setScene(currentScene.pixmap.toImage());
 	foreach(Object object, objects)
@@ -130,7 +126,7 @@ void SceneTab::buildMap()
 	mapScene->render(&painter);
 	QPixmap pixmap = QPixmap::fromImage(image);
 	
-	int mapId = db->addMap(pixmap);
+	int mapId = Database::getInstance().addMap(pixmap);
 	
 	emit mapCreated(mapId);
 	delete mapScene;

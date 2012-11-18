@@ -14,7 +14,6 @@ public:
 	~MapTab();
 public slots:
 	void addMap(int id);
-	void setDatabase(Database &db);
 	void runMapsDialog();
 	void saveMapToFile();
 	void sendToKate();
@@ -28,7 +27,6 @@ private:
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
 	Map currentMap;
-	Database *db;
 	FuzzyGrid *fuzzyGrid;
 	QGridLayout *mainLayout;
 	QTcpSocket *kateSocket;

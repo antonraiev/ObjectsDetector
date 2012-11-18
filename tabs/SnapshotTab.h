@@ -15,7 +15,6 @@ signals:
 public:
 	SnapshotTab(QWidget *parent = 0);
 	~SnapshotTab();
-	void setDatabase(Database &db);
 public slots:
 	void addSlide(int id);
 	void addScene(int id);
@@ -44,7 +43,6 @@ private:
 	QPushButton *leftArrow,*rightArrow;
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
-	Database *db;
 };
 
 #endif // SNAPSHOTWIDGET_H

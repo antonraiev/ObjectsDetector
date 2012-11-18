@@ -51,21 +51,17 @@ MapTab::MapTab(QWidget *parent)
 void MapTab::addMap(int id)
 {
 	
-	currentMap = db->getMap(id);
+	currentMap = Database::getInstance().getMap(id);
 	
 	scene->clear();
 	scene->addPixmap(QPixmap::fromImage(currentMap.image));
 }
-void MapTab::setDatabase(Database &db)
-{
-	this->db=&db;
-}
+
 void MapTab::runMapsDialog()
 {
 	ScenesDialog *dialog=new ScenesDialog(this);
-	DatabaseModel dbModel;
-	dbModel.setDatabase(*db);
-	dialog->setDbModel(dbModel);
+	DatabaseView dbView;
+	dialog->setDbModel(dbView);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 		addMap(dialog->selectedSceneId());

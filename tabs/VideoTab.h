@@ -13,7 +13,6 @@ signals:
 public:
 	VideoTab(QWidget *parent = 0, Qt::WFlags flags = 0);
 	~VideoTab();
-	void setDatabase(Database &db);
 public slots:
 	void takeSnapshot();
 	void upCameraMove();
@@ -25,7 +24,6 @@ protected:
 	virtual void paintEvent(QPaintEvent *ev);
 private:
 	VideoView *video;
-	Database *db;
 };
 
 #endif // MAINWINDOW_H

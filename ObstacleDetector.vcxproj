@@ -86,9 +86,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="database\Database.cpp" />
-    <ClCompile Include="database\DatabaseModel.cpp" />
+    <ClCompile Include="database\DatabaseView.cpp" />
     <ClCompile Include="database\QModelIndexListHack.cpp" />
-    <ClCompile Include="DbException.cpp" />
+    <ClCompile Include="database\DbException.cpp" />
     <ClCompile Include="dialogs\AddChangeDescrDialog.cpp" />
     <ClCompile Include="dialogs\AddObjectDialog.cpp" />
     <ClCompile Include="fuzzy\FuzzyGrid.cpp" />
@@ -368,7 +368,7 @@
     </CustomBuild>
     <ClInclude Include="cv\QtOpenCV.h" />
     <ClInclude Include="database\Database.h" />
-    <ClInclude Include="database\DatabaseModel.h" />
+    <ClInclude Include="database\DatabaseView.h" />
     <ClInclude Include="database\QModelIndexListHack.h" />
     <ClInclude Include="database\Structs.h" />
     <ClInclude Include="camera\IPCamera.h" />
@@ -382,7 +382,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_PHONON_LIB -DQT_DLL -DQT_NETWORK_LIB -D_UNICODE "-I.\GeneratedFiles" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtNetwork"</Command>
     </CustomBuild>
-    <ClInclude Include="DbException.h" />
+    <ClInclude Include="database\DbException.h" />
     <ClInclude Include="resource.h" />
     <CustomBuild Include="tabs\SceneTab.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

@@ -14,7 +14,6 @@ public:
 	~SceneTab();
 public slots:
 	void addScene(int id);
-	void setDatabase(Database &db);
 	void runScenesDialog();
 	void findObjects();
 	void buildMap();
@@ -26,7 +25,6 @@ private:
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
 	Scene currentScene;
-	Database *db;
 	QGridLayout *mainLayout;
 	multimap<bool, QRect> mapPoints;
 	double robotHeightPx;

@@ -8,8 +8,7 @@
 class Database
 {
 public:
-	Database(void);
-	~Database(void);
+	static Database& getInstance();
 	int addSnapshot(QImage &image);
 	int addSnapshot(QPixmap &pixmap);
 	Snapshot getSnapshot(int id);
@@ -34,6 +33,10 @@ protected:
 	void connect();
 	void disconnect();
 	void executeQuery(QSqlQuery query);
+private:
+	Database(void);
+	Database(Database const&);
+	void operator=(Database const&);
 private:
 	QSqlDatabase db;
 };

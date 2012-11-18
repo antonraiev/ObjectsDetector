@@ -2,7 +2,7 @@
 #include "../views/QGraphicsSnapShotItem.h"
 #include "../dialogs/SnapshotsDialog.h"
 #include "../dialogs/ScenesDialog.h"
-#include "../database/DatabaseModel.h"
+#include "../database/DatabaseView.h"
 SnapshotTab::SnapshotTab(QWidget *parent)
 	: QWidget(parent)
 {
@@ -97,9 +97,8 @@ void SnapshotTab::moveSlidesLeft()
 void SnapshotTab::runSnapshotsDialog()
 {
 	SnapshotsDialog *dialog=new SnapshotsDialog(this);
-	DatabaseModel dbModel;
-	dbModel.setDatabase(*db);
-	dialog->setDbModel(dbModel);
+	DatabaseView dbView;
+	dialog->setDbModel(dbView);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 	{
@@ -133,14 +132,11 @@ void SnapshotTab::resizeEvent(QResizeEvent *ev)
 	scene->setSceneRect(sceneView->rect());
 	QWidget::resizeEvent(ev);
 }
-void SnapshotTab::setDatabase(Database &db)
-{
-	this->db=&db;
-}
+
 void SnapshotTab::addSlide(int id)
 {
 	
-	Snapshot snapshot=db->getSnapshot(id);
+	Snapshot snapshot=Database::getInstance().getSnapshot(id);
 	
 	QGraphicsSnapShotItem *slide=new QGraphicsSnapShotItem();
 	slide->setPixmap(QPixmap().fromImage(snapshot.image));
@@ -176,7 +172,7 @@ void SnapshotTab::drawSlides(int n)
 void SnapshotTab::addScenePart(int n)
 {
 	
-	QGraphicsPixmapItem *item=new QGraphicsPixmapItem(QPixmap::fromImage(db->getSnapshot(n).image));
+	QGraphicsPixmapItem *item=new QGraphicsPixmapItem(QPixmap::fromImage(Database::getInstance().getSnapshot(n).image));
 	
 	parts.push_back(n);
 	scene->addItem(item);
@@ -186,9 +182,8 @@ void SnapshotTab::addScenePart(int n)
 void SnapshotTab::runScenesDialog()
 {
 	ScenesDialog *dialog=new ScenesDialog(this);
-	DatabaseModel dbModel;
-	dbModel.setDatabase(*db);
-	dialog->setDbModel(dbModel);
+	DatabaseView dbView;
+	dialog->setDbModel(dbView);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 		addScene(dialog->selectedSceneId());
@@ -197,7 +192,7 @@ void SnapshotTab::runScenesDialog()
 void SnapshotTab::addScene(int id)
 {
 	
-	Scene curScene=db->getScene(id);
+	Scene curScene=Database::getInstance().getScene(id);
 	
 	scene->clear();
 	scene->addPixmap(curScene.pixmap);
@@ -230,10 +225,10 @@ QPainter painter(&image);
 scene->render(&painter);
 scenePixmap = QPixmap::fromImage(image);
 	
-	int sceneId=db->addScene(scenePixmap);
+	int sceneId=Database::getInstance().addScene(scenePixmap);
 	foreach(int snapshot_id,parts)
 	{
-		db->addPart(sceneId,snapshot_id);
+		Database::getInstance().addPart(sceneId,snapshot_id);
 	}
 	
 	//QLabel *lbl=new QLabel();

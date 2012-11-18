@@ -3,7 +3,7 @@
 
 #include <QtGui>
 #include "../database/Structs.h"
-#include "../database/DatabaseModel.h"
+#include "../database/DatabaseView.h"
 
 class ScenesDialog : public QDialog
 {
@@ -12,7 +12,7 @@ class ScenesDialog : public QDialog
 public:
 	ScenesDialog(QWidget *parent=0);
 	~ScenesDialog();
-	void setDbModel(DatabaseModel &dbModel);
+	void setDbModel(DatabaseView &dbView);
 	int exec();
 	int selectedSceneId();
 protected slots:
@@ -21,7 +21,7 @@ private:
 	QTableWidget *table;
 	QList<Scene> sceneslist;
 	int selectedId;
-	DatabaseModel *dbModel;	
+	DatabaseView *dbView;	
 };
 
 #endif // SCENESDIALOG_H

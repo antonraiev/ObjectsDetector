@@ -9,7 +9,6 @@ class AddObjectDialog : public QDialog
 	Q_OBJECT
 public:
 	AddObjectDialog(QWidget *parent=0,bool isAddDialog=true);
-	void setDatabase(Database &db);
 	QPixmap object();
 	void setNameId(int id);
 	int nameId();
@@ -22,7 +21,6 @@ public slots:
 	void fromSnapshotButtonPressed();
 private:
 	bool isAddDialog;
-	Database *db;
 	QComboBox *objNames;
 	QList<Description> descriptions;
 	QLineEdit *physHeightEdit;

@@ -72,10 +72,7 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	mainLayout->addWidget(snap,1,3,1,1);
 	setLayout(mainLayout);
 }
-void VideoTab::setDatabase(Database &db)
-{
-	this->db = &db;
-}
+
 void VideoTab::takeSnapshot()
 {
 	QSound sound("Resources/snapshot.wav");
@@ -83,11 +80,17 @@ void VideoTab::takeSnapshot()
 	QPixmap pixmap;
 	pixmap = pixmap.grabWidget(video);
 	
-	int id = db->addSnapshot(pixmap);
-	if(id == -1)
-		QMessageBox::warning(0,"Ошибка","Ошибка при сохранении снимка в БД");
-	else emit snapshotAdded(id);
-	
+	int id = 0;
+	try
+	{
+		id = Database::getInstance().addSnapshot(pixmap);
+	}
+	catch(DbException ex)
+	{
+		QMessageBox::warning(0,"Ошибка", ex.what());
+		return;
+	}
+	emit snapshotAdded(id);
 }
 void VideoTab::upCameraMove()
 {

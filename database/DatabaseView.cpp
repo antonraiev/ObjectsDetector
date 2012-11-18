@@ -1,46 +1,47 @@
-#include "DatabaseModel.h"
+#include "DatabaseView.h"
 
 
-DatabaseModel::DatabaseModel(void)
+DatabaseView::DatabaseView(void)
 {
 }
-void DatabaseModel::setDatabase(Database &db)
+
+QTableWidget* DatabaseView::snapshotsTable()
 {
-	this->db=&db;
-}
-QTableWidget* DatabaseModel::snapshotsTable()
-{
-	
-	QList<Snapshot> snapslist=db->getSnapshots();
-	
+	if(tables.find(SNAPSHOTS) != tables.end())
+	{
+		return tables[SNAPSHOTS].second;
+	}
+
+	QList<Snapshot> snapslist = Database::getInstance().getSnapshots();
 	QTableWidget *table;
-	const QSize previewSize=QSize(64,64);
-	table=new QTableWidget(snapslist.count(),6);
+	const QSize previewSize = QSize(64,64);
+	table = new QTableWidget(snapslist.count(), 6);
 	table->setIconSize(previewSize);
 	table->setHorizontalHeaderLabels(QStringList()<<"Снимок"<<"Ширина"<<"Высота"<<"Дата"<<"На сцене"<<"hidden");
 	table->setSelectionBehavior(QAbstractItemView::SelectRows);
-	int row=0;
+	int row = 0;
 	QByteArray imageBytes;
 	foreach(Snapshot snapshot,snapslist)
 	{
-		table->setItem(row,0,new QTableWidgetItem(QPixmap::fromImage(snapshot.image.scaled(previewSize,Qt::KeepAspectRatio)),""));		
-		table->setItem(row,1,new QTableWidgetItem(QString("%1").arg(snapshot.width)));
-		table->setItem(row,2,new QTableWidgetItem(QString("%1").arg(snapshot.height)));
-		table->setItem(row,3,new QTableWidgetItem(snapshot.created.toString()));
-		table->setItem(row,4,new QTableWidgetItem(snapshot.in_scene ? "Да" : "Нет"));
-		table->setItem(row,5,new QTableWidgetItem(QString("%1").arg(snapshot.id)));
-		table->verticalHeader()->resizeSection(row,previewSize.height());
-		for(int i=0; i<4; i++)
-			table->item(row,i)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+		table->setItem(row, 0, new QTableWidgetItem(QPixmap::fromImage(snapshot.image.scaled(previewSize,Qt::KeepAspectRatio)),""));		
+		table->setItem(row, 1, new QTableWidgetItem(QString("%1").arg(snapshot.width)));
+		table->setItem(row, 2, new QTableWidgetItem(QString("%1").arg(snapshot.height)));
+		table->setItem(row, 3, new QTableWidgetItem(snapshot.created.toString()));
+		table->setItem(row, 4, new QTableWidgetItem(snapshot.in_scene ? "Да" : "Нет"));
+		table->setItem(row, 5, new QTableWidgetItem(QString("%1").arg(snapshot.id)));
+		table->verticalHeader()->resizeSection(row, previewSize.height());
+		for(int i = 0; i < 4; i++)
+			table->item(row,i)->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 		row++;
 	}
-	table->setColumnHidden(5,true);
+	table->setColumnHidden(5, true);
+	tables[SNAPSHOTS] = std::make_pair("Снимки", table);
 	return table;
 }
-QTableWidget* DatabaseModel::scenesTable()
+QTableWidget* DatabaseView::scenesTable()
 {
 	
-	QList<Scene> sceneslist=db->getScenes();
+	QList<Scene> sceneslist=Database::getInstance().getScenes();
 	
 	QTableWidget *table;
 	const QSize previewSize=QSize(128,96);
@@ -67,10 +68,10 @@ QTableWidget* DatabaseModel::scenesTable()
 	table->setColumnHidden(5,true);
 	return table;
 }
-QTableWidget* DatabaseModel::objectsTable()
+QTableWidget* DatabaseView::objectsTable()
 {
 	
-	QList<Object> objlist=db->getObjects();
+	QList<Object> objlist=Database::getInstance().getObjects();
 	
 	QTableWidget *table;
 	const QSize previewSize=QSize(64,64);
@@ -95,10 +96,10 @@ QTableWidget* DatabaseModel::objectsTable()
 	table->setColumnHidden(4,true);
 	return table;
 }
-QTableWidget* DatabaseModel::descriptionsTable()
+QTableWidget* DatabaseView::descriptionsTable()
 {
 	
-	QList<Description> descrlist=db->getDescriptions();
+	QList<Description> descrlist=Database::getInstance().getDescriptions();
 	
 	QTableWidget *table;
 	table=new QTableWidget(descrlist.count(),3);
@@ -119,6 +120,6 @@ QTableWidget* DatabaseModel::descriptionsTable()
 	table->setColumnHidden(2,true);
 	return table;
 }
-DatabaseModel::~DatabaseModel(void)
+DatabaseView::~DatabaseView(void)
 {
 }

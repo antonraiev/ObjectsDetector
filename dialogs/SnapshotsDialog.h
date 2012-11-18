@@ -3,7 +3,7 @@
 
 #include <QtGui>
 #include "../database/Structs.h"
-#include "../database/DatabaseModel.h"
+#include "../database/DatabaseView.h"
 class SnapshotsDialog : public QDialog
 {
 	Q_OBJECT
@@ -11,7 +11,7 @@ class SnapshotsDialog : public QDialog
 public:
 	SnapshotsDialog(QWidget *parent);
 	~SnapshotsDialog();
-	void setDbModel(DatabaseModel &dbModel);
+	void setDbModel(DatabaseView &dbView);
 	int exec();
 	QList<int> selectedIdentifiers();
 protected slots:
@@ -20,7 +20,7 @@ private:
 	QTableWidget *table;
 	QList<Snapshot> snapslist;
 	QList<int> selectedId;
-	DatabaseModel *dbModel;
+	DatabaseView *dbView;
 };
 
 #endif // SNAPSHOTSDIALOG_H

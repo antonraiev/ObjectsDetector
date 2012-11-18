@@ -7,6 +7,13 @@ Database::Database(void)
 	db.setDatabaseName("Driver={SQL Server Native Client 10.0};Server=ASPIRE-5738\\SQLEXPRESS;"\
 		"Database=ObstacleDetectorDB;Trusted_Connection=yes;");
 }
+
+Database& Database::getInstance()
+{
+	static Database instance;
+	return instance;
+}
+
 void Database::connect()
 {
 	if(db.isOpen())
@@ -420,7 +427,4 @@ void Database::addPart(int sceneId,int snapshotId)
 	query.bindValue(":snapshot_id",snapshotId);
 	executeQuery(query);
 	disconnect();
-}
-Database::~Database(void)
-{
 }
