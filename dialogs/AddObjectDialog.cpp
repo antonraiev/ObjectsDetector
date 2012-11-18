@@ -49,9 +49,7 @@ AddObjectDialog::AddObjectDialog(QWidget *parent,bool isAddDialog)
 }
 void AddObjectDialog::fromSceneButtonPressed()
 {
-	DatabaseView model;
 	ScenesDialog *dialog=new ScenesDialog(this);
-	dialog->setDbModel(model);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 	{
@@ -64,9 +62,7 @@ void AddObjectDialog::fromSceneButtonPressed()
 }
 void AddObjectDialog::fromSnapshotButtonPressed()
 {
-	DatabaseView model;
 	SnapshotsDialog *dialog=new SnapshotsDialog(this);
-	dialog->setDbModel(model);
 	int result=dialog->exec();
 	if(result==QDialog::Accepted)
 	{

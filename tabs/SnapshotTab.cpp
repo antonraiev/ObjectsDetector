@@ -96,14 +96,12 @@ void SnapshotTab::moveSlidesLeft()
 }
 void SnapshotTab::runSnapshotsDialog()
 {
-	SnapshotsDialog *dialog=new SnapshotsDialog(this);
-	DatabaseView dbView;
-	dialog->setDbModel(dbView);
-	int result=dialog->exec();
-	if(result==QDialog::Accepted)
+	SnapshotsDialog *dialog = new SnapshotsDialog(this);
+	int result = dialog->exec();
+	if(result == QDialog::Accepted)
 	{
 		QList<int> identifiers=dialog->selectedIdentifiers();
-		foreach(int id,identifiers)
+		foreach(int id, identifiers)
 		{
 			addSlide(id);
 		}
@@ -182,10 +180,8 @@ void SnapshotTab::addScenePart(int n)
 void SnapshotTab::runScenesDialog()
 {
 	ScenesDialog *dialog=new ScenesDialog(this);
-	DatabaseView dbView;
-	dialog->setDbModel(dbView);
-	int result=dialog->exec();
-	if(result==QDialog::Accepted)
+	int result = dialog->exec();
+	if(result == QDialog::Accepted)
 		addScene(dialog->selectedSceneId());
 }
 

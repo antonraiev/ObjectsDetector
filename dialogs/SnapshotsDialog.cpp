@@ -14,14 +14,11 @@ SnapshotsDialog::SnapshotsDialog(QWidget *parent)
 	layout->addWidget(cancel,5,4,1,1);
 	setLayout(layout);
 }
-void SnapshotsDialog::setDbModel(DatabaseView &dbView)
-{
-	this->dbView=&dbView;
-}
+
 int SnapshotsDialog::exec()
 {
 	setCursor(Qt::WaitCursor);
-	table=dbView->snapshotsTable();
+	table=DatabaseView::getInstance().snapshotsTable();
 	setCursor(Qt::ArrowCursor);
 	connect(table,SIGNAL(itemSelectionChanged()),SLOT(selectionChanged()));
 	((QGridLayout*)layout())->addWidget(table,0,0,5,5);

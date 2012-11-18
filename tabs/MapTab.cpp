@@ -59,11 +59,9 @@ void MapTab::addMap(int id)
 
 void MapTab::runMapsDialog()
 {
-	ScenesDialog *dialog=new ScenesDialog(this);
-	DatabaseView dbView;
-	dialog->setDbModel(dbView);
-	int result=dialog->exec();
-	if(result==QDialog::Accepted)
+	ScenesDialog *dialog = new ScenesDialog(this);
+	int result = dialog->exec();
+	if(result == QDialog::Accepted)
 		addMap(dialog->selectedSceneId());
 }
 void MapTab::saveMapToFile()

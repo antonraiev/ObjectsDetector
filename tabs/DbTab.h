@@ -21,7 +21,6 @@ public slots:
 	void reloadTable(int pos=-1);
 private:
 	std::map<int,std::pair<QString,QTableWidget*> > tables;
-	DatabaseView dbView;
 	QTableWidget *table;
 	QComboBox *tableBox;
 	QGridLayout *mainLayout;

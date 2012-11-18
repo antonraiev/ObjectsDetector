@@ -11,7 +11,6 @@ class SnapshotsDialog : public QDialog
 public:
 	SnapshotsDialog(QWidget *parent);
 	~SnapshotsDialog();
-	void setDbModel(DatabaseView &dbView);
 	int exec();
 	QList<int> selectedIdentifiers();
 protected slots:
@@ -20,7 +19,6 @@ private:
 	QTableWidget *table;
 	QList<Snapshot> snapslist;
 	QList<int> selectedId;
-	DatabaseView *dbView;
 };
 
 #endif // SNAPSHOTSDIALOG_H

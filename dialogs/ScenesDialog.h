@@ -12,7 +12,6 @@ class ScenesDialog : public QDialog
 public:
 	ScenesDialog(QWidget *parent=0);
 	~ScenesDialog();
-	void setDbModel(DatabaseView &dbView);
 	int exec();
 	int selectedSceneId();
 protected slots:
@@ -21,7 +20,6 @@ private:
 	QTableWidget *table;
 	QList<Scene> sceneslist;
 	int selectedId;
-	DatabaseView *dbView;	
 };
 
 #endif // SCENESDIALOG_H

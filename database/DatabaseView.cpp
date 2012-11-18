@@ -5,6 +5,12 @@ DatabaseView::DatabaseView(void)
 {
 }
 
+DatabaseView& DatabaseView::getInstance()
+{
+	static DatabaseView instance;
+	return instance;
+}
+
 QTableWidget* DatabaseView::snapshotsTable()
 {
 	if(tables.find(SNAPSHOTS) != tables.end())
@@ -40,6 +46,10 @@ QTableWidget* DatabaseView::snapshotsTable()
 }
 QTableWidget* DatabaseView::scenesTable()
 {
+	if(tables.find(SCENES) != tables.end())
+	{
+		return tables[SCENES].second;
+	}
 	
 	QList<Scene> sceneslist=Database::getInstance().getScenes();
 	
@@ -66,12 +76,17 @@ QTableWidget* DatabaseView::scenesTable()
 	}
 	table->horizontalHeader()->resizeSection(0,previewSize.width());
 	table->setColumnHidden(5,true);
+	tables[SCENES] = std::make_pair("Сцены", table);
 	return table;
 }
 QTableWidget* DatabaseView::objectsTable()
 {
-	
-	QList<Object> objlist=Database::getInstance().getObjects();
+	if(tables.find(OBJECTS) != tables.end())
+	{
+		return tables[OBJECTS].second;
+	}
+
+	QList<Object> objlist = Database::getInstance().getObjects();
 	
 	QTableWidget *table;
 	const QSize previewSize=QSize(64,64);
@@ -94,11 +109,16 @@ QTableWidget* DatabaseView::objectsTable()
 	}
 	table->horizontalHeader()->resizeSection(3,150);
 	table->setColumnHidden(4,true);
+	tables[OBJECTS] = std::make_pair("Объекты", table);
 	return table;
 }
 QTableWidget* DatabaseView::descriptionsTable()
 {
-	
+	if(tables.find(DESCRIPTIONS) != tables.end())
+	{
+		return tables[DESCRIPTIONS].second;
+	}
+
 	QList<Description> descrlist=Database::getInstance().getDescriptions();
 	
 	QTableWidget *table;
@@ -117,9 +137,7 @@ QTableWidget* DatabaseView::descriptionsTable()
 	}
 	table->horizontalHeader()->resizeSection(0,150);
 	table->horizontalHeader()->resizeSection(1,300);
-	table->setColumnHidden(2,true);
+	table->setColumnHidden(2, true);
+	tables[DESCRIPTIONS] = std::make_pair("Описания", table);
 	return table;
-}
-DatabaseView::~DatabaseView(void)
-{
 }

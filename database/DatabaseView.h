@@ -9,12 +9,16 @@ enum DbTables {SNAPSHOTS, SCENES, DESCRIPTIONS, OBJECTS, MAPS};
 class DatabaseView
 {
 public:
-	DatabaseView(void);
+	static DatabaseView& getInstance();
 	QTableWidget* snapshotsTable();
 	QTableWidget* scenesTable();
 	QTableWidget* descriptionsTable();
 	QTableWidget* objectsTable();
-	~DatabaseView(void);
+
+private:
+	DatabaseView(void);	
+	DatabaseView(DatabaseView const&);
+	void operator=(DatabaseView const&);
 private:
 	std::map<int,std::pair<QString, QTableWidget*> > tables;
 };

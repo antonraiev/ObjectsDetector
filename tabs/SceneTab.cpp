@@ -34,11 +34,9 @@ void SceneTab::addScene(int id)
 
 void SceneTab::runScenesDialog()
 {
-	ScenesDialog *dialog=new ScenesDialog(this);
-	DatabaseView dbView;
-	dialog->setDbModel(dbView);
-	int result=dialog->exec();
-	if(result==QDialog::Accepted)
+	ScenesDialog *dialog = new ScenesDialog(this);
+	int result = dialog->exec();
+	if(result == QDialog::Accepted)
 		addScene(dialog->selectedSceneId());
 }
 void SceneTab::findObjects()
