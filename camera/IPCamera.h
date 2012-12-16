@@ -5,7 +5,7 @@
 #include <QSize>
 #include <string>
 #include "AbstractCamera.h"
-#include "../cv/QtOpenCV.h"
+#include "cv/QtOpenCV.h"
 
 class IPCamera : public AbstractCamera
 {

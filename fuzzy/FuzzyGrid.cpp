@@ -35,8 +35,7 @@ void FuzzyGrid::setGranulaSize(int size)
 	granules.clear();
 	factors.clear();
 	gridSize = size * 20;  // magic coefficient
-	QFont font("Times", gridSize / 5);
-	font.setLetterSpacing(QFont::PercentageSpacing, 50);
+    QFont font("Arial", gridSize / 5);
 
 	for(int i = 0; i < scene->width(); i += gridSize)
 	{
@@ -110,12 +109,21 @@ bool FuzzyGrid::gridVisible()
 
 void FuzzyGrid::doCalculations()
 {
-//	showFactors(Qt::Unchecked);
+    bool restore = false;
+    if(gridVisible())
+    {
+        showGrid(Qt::Unchecked);
+        restore = true;
+    }
 	QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);  
 	image.fill(Qt::transparent);                                              
 
 	QPainter painter(&image);
 	scene->render(&painter);
+    if(restore)
+    {
+        showGrid(Qt::Checked);
+    }
 
 	QRgb whitePixel = qRgb(255, 255, 255);
 	double whiteBrightness = 255 * gridSize * gridSize;
@@ -132,19 +140,11 @@ void FuzzyGrid::doCalculations()
 			{
 				QRgb pixelRgb = image.pixel(i, j);
 				brightness += (0.2126*qRed(pixelRgb)) + (0.7152*qGreen(pixelRgb)) + (0.0722*qBlue(pixelRgb));
-//				whiteBrightness += (0.2126*qRed(whitePixel)) + (0.7152*qGreen(whitePixel)) + (0.0722*qBlue(whitePixel));
 			}
 		}
 
-//		QFont font("Times", gridSize / 5);
-//		font.setLetterSpacing(QFont::PercentageSpacing, 50);
 		double factor = -1 + 2 * (brightness / whiteBrightness);
-		factors[factorIndex]->setPlainText(QString().number(factor));
+        factors[factorIndex]->setPlainText(QString().number(factor, 'g', 2));
 		factorIndex++;
-//		QGraphicsTextItem *text = new QGraphicsTextItem(QString().number(factor));
-//		text->setFont(font);
-//		text->setPos(granulaRect.x(), granulaRect.y());
-//		factors.push_back(text);
 	}
-//	showFactors(Qt::Checked);
 }

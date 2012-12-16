@@ -22,7 +22,7 @@ class CvSURF
 public:
 	CvSURF(void);
 	int compare(QPixmap *scene,QPixmap *object,QPoint *outputCoords);
-	static IplImage* CvSURF::QImageToIplImage(QPixmap * qPix);
+    static IplImage* QImageToIplImage(QPixmap * qPix);
 	static QImage IplCopyToQImage(IplImage *img);
 	~CvSURF(void);
 protected:

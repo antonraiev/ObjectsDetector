@@ -1,8 +1,7 @@
 #ifndef MAPTAB_H
 #define MAPTAB_H
 #include <QtGui>
-#include "../database/Database.h"
-#include "../fuzzy/FuzzyGrid.h"
+#include "fuzzy/FuzzyGrid.h"
 #include <qabstractsocket.h>
 #include <qtcpsocket.h>
 
@@ -26,7 +25,7 @@ protected:
 private:
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
-	Map currentMap;
+//	Map currentMap;
 	FuzzyGrid *fuzzyGrid;
 	QGridLayout *mainLayout;
 	QTcpSocket *kateSocket;

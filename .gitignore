@@ -1,6 +1,14 @@
+# Windows shared libraries
 opencv*.dll
 Qt*.dll
+
+# Generated MOC, resource, object files, etc
+moc_*.cpp
+qrc_*.cpp
+*.o
+*.pro.user
+
+# Directories under Windows
 GeneratedFiles/
 Debug/
 Release/
-DB/

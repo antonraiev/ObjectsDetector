@@ -15,12 +15,12 @@ int CvSURF::compare(QPixmap *scene,QPixmap *object,QPoint *outputCoords)
     CvSeq *objectKeypoints = 0, *objectDescriptors = 0;
     CvSeq *imageKeypoints = 0, *imageDescriptors = 0;
     int i;
-    // Инициализация структуры CvSURFParams с размером дескрипторов в 128
-    // элементов
+    // Г€Г­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї Г±ГІГ°ГіГЄГІГіГ°Г» CvSURFParams Г± Г°Г Г§Г¬ГҐГ°Г®Г¬ Г¤ГҐГ±ГЄГ°ГЁГЇГІГ®Г°Г®Гў Гў 128
+    // ГЅГ«ГҐГ¬ГҐГ­ГІГ®Гў
     CvSURFParams params = cvSURFParams(500, 1);
     CvMemStorage* storage = cvCreateMemStorage(0);
     cvExtractSURF(cvObject,0,&objectKeypoints,&objectDescriptors,storage,params );
-    // Ищем особенности сцены
+    // Г€Г№ГҐГ¬ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГЁ Г±Г¶ГҐГ­Г»
     cvExtractSURF(cvScene,0, &imageKeypoints, &imageDescriptors, storage, params );
     CvPoint src_corners[4] = {{0,0}, {cvObject->width,0}, {cvObject->width, cvObject->height}, {0, cvObject->height}};
     CvPoint dst_corners[4];
@@ -38,11 +38,11 @@ int CvSURF::compare(QPixmap *scene,QPixmap *object,QPoint *outputCoords)
         {{255,0,255}},
         {{255,255,255}}
     };
-    // Вызываем функцию, находящую объект на экране
+    // Г‚Г»Г§Г»ГўГ ГҐГ¬ ГґГіГ­ГЄГ¶ГЁГѕ, Г­Г ГµГ®Г¤ГїГ№ГіГѕ Г®ГЎГєГҐГЄГІ Г­Г  ГЅГЄГ°Г Г­ГҐ
     if(locatePlanarObject(objectKeypoints, objectDescriptors,imageKeypoints,
         imageDescriptors,src_corners,dst_corners))
     {
-         // Получаем нужный четырёхугольник
+         // ГЏГ®Г«ГіГ·Г ГҐГ¬ Г­ГіГ¦Г­Г»Г© Г·ГҐГІГ»Г°ВёГµГіГЈГ®Г«ГјГ­ГЁГЄ
         for( i = 0; i < 4; i++ )
         {
             CvPoint r1 = dst_corners[i%4];
@@ -52,7 +52,7 @@ int CvSURF::compare(QPixmap *scene,QPixmap *object,QPoint *outputCoords)
     }
 	else return -1;
 }
-// Сравнение двух особенностей
+// Г‘Г°Г ГўГ­ГҐГ­ГЁГҐ Г¤ГўГіГµ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГ©
 double CvSURF::compareSURFDescriptors( const float* d1, const float* d2, double best, int length )
 {
     double total_cost = 0;
@@ -110,7 +110,7 @@ QImage CvSURF::IplCopyToQImage(IplImage *iplImg)
 }
 IplImage* CvSURF::QImageToIplImage(QPixmap *qPix)
 {
-	QImage *qImage=&(qPix->toImage());
+    QImage *qImage= new QImage(qPix->toImage());
     int width=qImage->width();
     int height=qImage->height();
     CvSize Size;
@@ -127,7 +127,7 @@ IplImage* CvSURF::QImageToIplImage(QPixmap *qPix)
 	}
     return charIplImageBuffer;
 }
-// Сравнивает одну особенность объекта со всеми особенностями сцены
+// Г‘Г°Г ГўГ­ГЁГўГ ГҐГІ Г®Г¤Г­Гі Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГј Г®ГЎГєГҐГЄГІГ  Г±Г® ГўГ±ГҐГ¬ГЁ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГїГ¬ГЁ Г±Г¶ГҐГ­Г»
 int CvSURF::naiveNearestNeighbor( const float* vec, int laplacian,
                       const CvSeq* model_keypoints,
                       const CvSeq* model_descriptors )
@@ -136,24 +136,24 @@ int CvSURF::naiveNearestNeighbor( const float* vec, int laplacian,
     int i, neighbor = -1;
     double d, dist1 = 1e6, dist2 = 1e6;
     CvSeqReader reader, kreader;
-    // Начальная особенность сцены
+    // ГЌГ Г·Г Г«ГјГ­Г Гї Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГј Г±Г¶ГҐГ­Г»
     cvStartReadSeq( model_keypoints, &kreader, 0 );
     cvStartReadSeq( model_descriptors, &reader, 0 );
-    // Перебор всех особенностей сцены
+    // ГЏГҐГ°ГҐГЎГ®Г° ГўГ±ГҐГµ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГ© Г±Г¶ГҐГ­Г»
     for( i = 0; i < model_descriptors->total; i++ )
     {
         const CvSURFPoint* kp = (const CvSURFPoint*)kreader.ptr;
         const float* mvec = (const float*)reader.ptr;
         CV_NEXT_SEQ_ELEM( kreader.seq->elem_size, kreader );
         CV_NEXT_SEQ_ELEM( reader.seq->elem_size, reader );
-        // Для ускорения сначала сравнивается лапласиан особенностей
+        // Г„Г«Гї ГіГ±ГЄГ®Г°ГҐГ­ГЁГї Г±Г­Г Г·Г Г«Г  Г±Г°Г ГўГ­ГЁГўГ ГҐГІГ±Гї Г«Г ГЇГ«Г Г±ГЁГ Г­ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГ©
         if( laplacian != kp->laplacian )
             continue;
-        // Сравнение особенностей
+        // Г‘Г°Г ГўГ­ГҐГ­ГЁГҐ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГ©
         d = compareSURFDescriptors( vec, mvec, dist2, length );
         if( d < dist1 )
         {
-            // Найдена лучшее совпадение особенностей
+            // ГЌГ Г©Г¤ГҐГ­Г  Г«ГіГ·ГёГҐГҐ Г±Г®ГўГЇГ Г¤ГҐГ­ГЁГҐ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГ©
             dist2 = dist1;
             dist1 = d;
             neighbor = i;
@@ -165,28 +165,28 @@ int CvSURF::naiveNearestNeighbor( const float* vec, int laplacian,
         return neighbor;
     return -1;
 }
-// Функция ищет совпадающие пары
+// Г”ГіГ­ГЄГ¶ГЁГї ГЁГ№ГҐГІ Г±Г®ГўГЇГ Г¤Г ГѕГ№ГЁГҐ ГЇГ Г°Г»
 void CvSURF::findPairs( const CvSeq* objectKeypoints, const CvSeq* objectDescriptors,
            const CvSeq* imageKeypoints, const CvSeq* imageDescriptors, vector<int>& ptpairs )
 {
     int i;
     CvSeqReader reader, kreader;
-    // Установка начальной особенности объекта распознавания
+    // Г“Г±ГІГ Г­Г®ГўГЄГ  Г­Г Г·Г Г«ГјГ­Г®Г© Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГЁ Г®ГЎГєГҐГЄГІГ  Г°Г Г±ГЇГ®Г§Г­Г ГўГ Г­ГЁГї
     cvStartReadSeq( objectKeypoints, &kreader );
     cvStartReadSeq( objectDescriptors, &reader );
     ptpairs.clear();
-    // Перебор всех особенностетей объекта
+    // ГЏГҐГ°ГҐГЎГ®Г° ГўГ±ГҐГµ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГІГҐГ© Г®ГЎГєГҐГЄГІГ 
     for( i = 0; i < objectDescriptors->total; i++ )
     {
         const CvSURFPoint* kp = (const CvSURFPoint*)kreader.ptr;
         const float* descriptor = (const float*)reader.ptr;
         CV_NEXT_SEQ_ELEM( kreader.seq->elem_size, kreader );
         CV_NEXT_SEQ_ELEM( reader.seq->elem_size, reader );
-        // Сравнение текущей особенности со всеми особенностями из сцены
+        // Г‘Г°Г ГўГ­ГҐГ­ГЁГҐ ГІГҐГЄГіГ№ГҐГ© Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГЁ Г±Г® ГўГ±ГҐГ¬ГЁ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГїГ¬ГЁ ГЁГ§ Г±Г¶ГҐГ­Г»
         int nearest_neighbor = naiveNearestNeighbor( descriptor, kp->laplacian, imageKeypoints, imageDescriptors );
         if( nearest_neighbor >= 0 )
         {
-            // Нашлось совпадение особенностей
+            // ГЌГ ГёГ«Г®Г±Гј Г±Г®ГўГЇГ Г¤ГҐГ­ГЁГҐ Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГ©
             ptpairs.push_back(i);
             ptpairs.push_back(nearest_neighbor);
         }
@@ -202,31 +202,31 @@ int CvSURF::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* objec
     vector<CvPoint2D32f> pt1, pt2;
     CvMat _pt1, _pt2;
     int i, n;
-    // Ищем пары особенностей на обеих картинках, которые соответствуют
-    // друг другу
+    // Г€Г№ГҐГ¬ ГЇГ Г°Г» Г®Г±Г®ГЎГҐГ­Г­Г®Г±ГІГҐГ© Г­Г  Г®ГЎГҐГЁГµ ГЄГ Г°ГІГЁГ­ГЄГ Гµ, ГЄГ®ГІГ®Г°Г»ГҐ Г±Г®Г®ГІГўГҐГІГ±ГІГўГіГѕГІ
+    // Г¤Г°ГіГЈ Г¤Г°ГіГЈГі
     findPairs( objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs );
     n = ptpairs.size()/2;
-    // Если пар мало, значит надо выходить - объект не найден
+    // Г…Г±Г«ГЁ ГЇГ Г° Г¬Г Г«Г®, Г§Г­Г Г·ГЁГІ Г­Г Г¤Г® ГўГ»ГµГ®Г¤ГЁГІГј - Г®ГЎГєГҐГЄГІ Г­ГҐ Г­Г Г©Г¤ГҐГ­
     if( n < 4 )
         return 0;
-    // Выделяем память
+    // Г‚Г»Г¤ГҐГ«ГїГҐГ¬ ГЇГ Г¬ГїГІГј
     pt1.resize(n);
     pt2.resize(n);
-    // Считываем координаты «особых»точек
+    // Г‘Г·ГЁГІГ»ГўГ ГҐГ¬ ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» В«Г®Г±Г®ГЎГ»ГµВ»ГІГ®Г·ГҐГЄ
     for( i = 0; i < n; i++ )
     {
         pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
         pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
     }
-    // По полученным векторам создаём матриц
+    // ГЏГ® ГЇГ®Г«ГіГ·ГҐГ­Г­Г»Г¬ ГўГҐГЄГІГ®Г°Г Г¬ Г±Г®Г§Г¤Г ВёГ¬ Г¬Г ГІГ°ГЁГ¶
     _pt1 = cvMat(1, n, CV_32FC2, &pt1[0] );
     _pt2 = cvMat(1, n, CV_32FC2, &pt2[0] );
-    // Находим трансформацию между исходным изображением и с тем, которое
-    // ищем
+    // ГЌГ ГµГ®Г¤ГЁГ¬ ГІГ°Г Г­Г±ГґГ®Г°Г¬Г Г¶ГЁГѕ Г¬ГҐГ¦Г¤Гі ГЁГ±ГµГ®Г¤Г­Г»Г¬ ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГҐГ¬ ГЁ Г± ГІГҐГ¬, ГЄГ®ГІГ®Г°Г®ГҐ
+    // ГЁГ№ГҐГ¬
     if( !cvFindHomography( &_pt1, &_pt2, &_h, CV_RANSAC, 5 ))
         return 0;
-    // По полученному значению трансформации (в матрицу _h) находим
-    // координаты четырёхугольника, характеризующего объект
+    // ГЏГ® ГЇГ®Г«ГіГ·ГҐГ­Г­Г®Г¬Гі Г§Г­Г Г·ГҐГ­ГЁГѕ ГІГ°Г Г­Г±ГґГ®Г°Г¬Г Г¶ГЁГЁ (Гў Г¬Г ГІГ°ГЁГ¶Гі _h) Г­Г ГµГ®Г¤ГЁГ¬
+    // ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» Г·ГҐГІГ»Г°ВёГµГіГЈГ®Г«ГјГ­ГЁГЄГ , ГµГ Г°Г ГЄГІГҐГ°ГЁГ§ГіГѕГ№ГҐГЈГ® Г®ГЎГєГҐГЄГІ
     for( i = 0; i < 4; i++ )
     {
         double x = src_corners[i].x, y = src_corners[i].y;

@@ -1,10 +1,10 @@
 #include "VideoView.h"
-#include "../camera/UsbCamera.h"
+#include "../camera/IPCamera.h"
 
 VideoView::VideoView(QWidget *parent)
 	: QLabel(parent)
 {
-	camera = new UsbCamera();
+    camera = new IPCamera();
 	camera->setRenderWidget(this);
 	camera->Run();
 }

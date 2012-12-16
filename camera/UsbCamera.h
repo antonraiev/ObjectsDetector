@@ -1,6 +1,6 @@
 #pragma once
 #include <QtGui>
-#include "../cv/CvSURF.h"
+#include "cv/CvSURF.h"
 #include "AbstractCamera.h"
 
 class UsbCamera : public AbstractCamera

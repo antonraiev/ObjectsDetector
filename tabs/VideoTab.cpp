@@ -1,95 +1,67 @@
 #include "VideoTab.h"
-#include <QtSql>
-#include "../camera/UsbRotatingCamera.h"
+
+#include "camera/IPCamera.h"
 #pragma comment(lib,"Control.lib")
 
 VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	: QWidget(parent, flags)
 {
-	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("Windows-1251")); 
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
 	video = new VideoView();
 	QTimer* videoTimer = new QTimer(this);
 	connect(videoTimer, SIGNAL(timeout()), video, SLOT(repaint()));
 	videoTimer->setInterval(50);
 	videoTimer->start();
 
-	QPushButton *snap=new QPushButton("—ÌËÏÓÍ");
-	QPushButton *leftArrow=new QPushButton(QIcon(":/img/leftarrow.jpg"),"");
-	QPushButton *topArrow=new QPushButton(QIcon(":/img/toparrow.jpg"),"");
-	QPushButton *bottomArrow=new QPushButton(QIcon(":/img/bottomarrow.jpg"),"");
-	QPushButton *rightArrow=new QPushButton(QIcon(":/img/rightarrow.jpg"),"");
-	leftArrow->setMaximumWidth(50);
-	topArrow->setMaximumWidth(50);
-	bottomArrow->setMaximumWidth(50);
-	rightArrow->setMaximumWidth(50);
-	connect(rightArrow,SIGNAL(pressed()),SLOT(rightCameraMove()));
-	connect(leftArrow,SIGNAL(pressed()),SLOT(leftCameraMove()));
-	connect(topArrow,SIGNAL(pressed()),SLOT(upCameraMove()));
-	connect(bottomArrow,SIGNAL(pressed()),SLOT(downCameraMove()));
-	connect(rightArrow,SIGNAL(released()),SLOT(endCameraMove()));
-	connect(leftArrow,SIGNAL(released()),SLOT(endCameraMove()));
-	connect(topArrow,SIGNAL(released()),SLOT(endCameraMove()));
-	connect(bottomArrow,SIGNAL(released()),SLOT(endCameraMove()));
+    QPushButton *fixSceneButton = new QPushButton("–ó–∞—Ñ–∏–∫—Å–∏—Ä–æ–≤–∞—Ç—å —Å—Ü–µ–Ω—É");
 
-	QGridLayout *gridArrows=new QGridLayout;
-	gridArrows->addWidget(leftArrow,1,0,1,1);
-	gridArrows->addWidget(topArrow,0,1,1,1);
-	gridArrows->addWidget(rightArrow,1,2,1,1);
-	gridArrows->addWidget(bottomArrow,2,1,1,1,Qt::AlignTop);
-	QGroupBox *controlGroup=new QGroupBox("”Ô‡‚ÎÂÌËÂ ÔÓ‚ÓÓÚ‡ÏË:");
-	controlGroup->setLayout(gridArrows);
-	connect(snap,SIGNAL(clicked()),SLOT(takeSnapshot()));
-	bool canRotate = video->getCamera()->canRotate();
-	if(!canRotate)
-	{
-		leftArrow->setEnabled(false);
-		topArrow->setEnabled(false);
-		bottomArrow->setEnabled(false);
-		rightArrow->setEnabled(false);
-	}
-	mainLayout = new QGridLayout();
+    connect(fixSceneButton,SIGNAL(clicked()),SLOT(fixScene()));
+
+    mainLayout = new QGridLayout();
 	QGridLayout *externLayout=new QGridLayout();
 	QVBoxLayout *videoLayout=new QVBoxLayout();
+
+    videoScene = new QGraphicsScene(this);
+    videoView = new QGraphicsView(videoScene);
 	if(video->getCamera()->Enabled())
 	{
-		videoScene = new QGraphicsScene(this);
-		video->resize(600,400);
-		videoScene->addWidget(video);
-		videoView = new QGraphicsView(videoScene);
+        videoScene->addWidget(video);
 		videoScene->setSceneRect(videoView->rect());
 		videoLayout->addWidget(videoView);
+        createFuzzyControls();
 	}
 	else
 	{
-		snap->setEnabled(false);
+        fixSceneButton->setEnabled(false);
 		QLabel *noVideo=new QLabel();
 		QPalette palette;
 		palette.setBrush(noVideo->backgroundRole(),QBrush(Qt::black));
 		palette.setColor(QPalette::WindowText,Qt::white);
 		noVideo->setPalette(palette);
 		noVideo->setAutoFillBackground(true);
-		noVideo->setText("¬Ë‰ÂÓ ÌÂ‰ÓÒÚÛÔÌÓ");
+        noVideo->setText("–í–∏–¥–µ–æ –Ω–µ–¥–æ—Å—Ç—É–ø–Ω–æ");
 		noVideo->setAlignment(Qt::AlignCenter);
-		videoLayout->addWidget(noVideo);
+        noVideo->resize(500,400);
+        videoScene->addWidget(noVideo);
+        videoScene->setSceneRect(videoView->rect());
+        videoLayout->addWidget(videoView);
 	}
 	externLayout->addLayout(videoLayout,0,0);
 	mainLayout->addLayout(externLayout,0,0,3,3);
-	mainLayout->addWidget(controlGroup,0,3,1,1);
-	mainLayout->addWidget(snap,1,3,1,1);
+    mainLayout->addWidget(fixSceneButton,0,3,1,1);
 
-	createFuzzyControls();
 	setLayout(mainLayout);
 }
 
 void VideoTab::createFuzzyControls()
 {
 	fuzzyGrid = new FuzzyGrid(videoScene);
-	QGroupBox *fuzzyControls = new QGroupBox("ÕÂ˜ÂÚÍ‡ˇ ÎÓ„ËÍ‡:");	
+    QGroupBox *fuzzyControls = new QGroupBox("–ù–µ—á–µ—Ç–∫–∞—è –ª–æ–≥–∏–∫–∞:");
 	QGridLayout *fuzzyLayout = new QGridLayout();
-	QCheckBox *showGridBox = new QCheckBox("ŒÚÓ·‡Ê‡Ú¸ ÒÂÚÍÛ");
+    QCheckBox *showGridBox = new QCheckBox("–ü–æ–∫–∞–∑—ã–≤–∞—Ç—å —Å–µ—Ç–∫—É");
 	connect(showGridBox, SIGNAL(stateChanged(int)), fuzzyGrid, SLOT(showGrid(int)));
 	fuzzyLayout->addWidget(showGridBox, 0, 0, 1, 1);
-	QLabel *gridSizeLabel = new QLabel("–‡ÁÏÂ ÒÂÚÍË:");
+    QLabel *gridSizeLabel = new QLabel("–†–∞–∑–º–µ—Ä —Å–µ—Ç–∫–∏:");
 	fuzzyLayout->addWidget(gridSizeLabel, 1, 0, 1, 1);
 	QRadioButton *oneSize = new QRadioButton("1");
 	connect(oneSize, SIGNAL(toggled(bool)), SLOT(radioToggled(bool)));
@@ -101,19 +73,19 @@ void VideoTab::createFuzzyControls()
 	fuzzyLayout->addWidget(oneSize, 2, 0, 1, 1);
 	fuzzyLayout->addWidget(twoSize, 3, 0, 1, 1);
 	fuzzyLayout->addWidget(fourSize, 4, 0, 1, 1);
-//	QPushButton *calcButton = new QPushButton("¬˚ÔÓÎÌËÚ¸ ‡Ò˜ÂÚ");
-	QCheckBox *showFactorsBox = new QCheckBox("ŒÚÓ·‡Ê‡Ú¸ Ù‡ÍÚÓ˚");
+//	QPushButton *calcButton = new QPushButton("√Ç√ª√Ø√Æ√´√≠√®√≤√º √∞√†√±√∑√•√≤");
+    QCheckBox *showFactorsBox = new QCheckBox("–ü–æ–∫–∞–∑—ã–≤–∞—Ç—å —Ñ–∞–∫—Ç–æ—Ä—ã");
 //	connect(calcButton, SIGNAL(clicked()), fuzzyGrid, SLOT(doCalculations()));
 	connect(showFactorsBox, SIGNAL(stateChanged(int)), fuzzyGrid, SLOT(showFactors(int)));
 	fuzzyLayout->addWidget(showFactorsBox, 5, 0, 1, 1);
 	
 	fuzzyControls->setLayout(fuzzyLayout);
-	mainLayout->addWidget(fuzzyControls, 2,3,1,1);
+    mainLayout->addWidget(fuzzyControls, 1,3,1,1);
 
 	QTimer* factorsTimer = new QTimer(this);
 	connect(factorsTimer, SIGNAL(timeout()), fuzzyGrid, SLOT(doCalculations()));
 	factorsTimer->setInterval(1000);
-	factorsTimer->start();
+    factorsTimer->start();
 }
 
 void VideoTab::radioToggled(bool checked)
@@ -126,49 +98,21 @@ void VideoTab::radioToggled(bool checked)
 	fuzzyGrid->setGranulaSize(size);
 }
 
-void VideoTab::takeSnapshot()
+void VideoTab::fixScene()
 {
 	QSound sound("Resources/snapshot.wav");
 	sound.play();
 	QPixmap pixmap;
 	pixmap = pixmap.grabWidget(video);
 	
-	int id = 0;
-	try
-	{
-		id = Database::getInstance().addSnapshot(pixmap);
-	}
-	catch(DbException ex)
-	{
-		QMessageBox::warning(0,"Œ¯Ë·Í‡", ex.what());
-		return;
-	}
-	emit snapshotAdded(id);
+    emit sceneFixed();
 }
-void VideoTab::upCameraMove()
-{
-	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Up);
-}
-void VideoTab::downCameraMove()
-{
-	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Down);
-}
-void VideoTab::leftCameraMove()
-{
-	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Left);
-}
-void VideoTab::rightCameraMove()
-{
-	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->beginMove(UsbRotatingCamera::Right);
-}
-void VideoTab::endCameraMove()
-{
-	dynamic_cast<UsbRotatingCamera*>(video->getCamera())->endMove();
-}
+
 void VideoTab::paintEvent(QPaintEvent *ev)
 {
-	QPainter painter(this);
-	videoScene->setSceneRect(videoScene->itemsBoundingRect());                          
+    QSize dimensions = video->getCamera()->getVideoDimensions();
+    video->resize(dimensions);
+    videoScene->setSceneRect(videoScene->itemsBoundingRect());
 }
 
 void VideoTab::keyPressEvent(QKeyEvent *ev)
