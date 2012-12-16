@@ -131,11 +131,26 @@ void SnapshotTab::resizeEvent(QResizeEvent *ev)
 	QWidget::resizeEvent(ev);
 }
 
+void SnapshotTab::addSlideFromCamera(int id)
+{
+	addSlide(id);
+	Snapshot snapshot = Database::getInstance().getSnapshot(id);
+	DatabaseView::getInstance().addToSnapshots(snapshot);
+}
+
 void SnapshotTab::addSlide(int id)
 {
-	
-	Snapshot snapshot=Database::getInstance().getSnapshot(id);
-	
+	Snapshot snapshot;
+	try
+	{
+		snapshot = Database::getInstance().getSnapshot(id);
+	}
+	catch(DbException ex)
+	{
+		QMessageBox::warning(0,"Îøèáêà", ex.what());
+		return;
+	}
+
 	QGraphicsSnapShotItem *slide=new QGraphicsSnapShotItem();
 	slide->setPixmap(QPixmap().fromImage(snapshot.image));
 	slide->setId(id);

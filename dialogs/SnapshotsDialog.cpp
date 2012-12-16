@@ -18,10 +18,11 @@ SnapshotsDialog::SnapshotsDialog(QWidget *parent)
 int SnapshotsDialog::exec()
 {
 	setCursor(Qt::WaitCursor);
-	table=DatabaseView::getInstance().snapshotsTable();
+	table = DatabaseView::getInstance().getTable(SNAPSHOTS);
 	setCursor(Qt::ArrowCursor);
-	connect(table,SIGNAL(itemSelectionChanged()),SLOT(selectionChanged()));
-	((QGridLayout*)layout())->addWidget(table,0,0,5,5);
+	connect(table, SIGNAL(itemSelectionChanged()), SLOT(selectionChanged()));
+	((QGridLayout*)layout())->addWidget(table, 0, 0, 5, 5);
+	table->show();
 	return QDialog::exec();
 }
 void SnapshotsDialog::selectionChanged()

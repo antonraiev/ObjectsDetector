@@ -14,9 +14,10 @@ signals:
 	void sceneFixed(int id);
 public:
 	SnapshotTab(QWidget *parent = 0);
+	void addSlide(int id);
 	~SnapshotTab();
 public slots:
-	void addSlide(int id);
+	void addSlideFromCamera(int id);
 	void addScene(int id);
 	void drawSlides(int n);
 	void moveSlidesRight();

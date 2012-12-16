@@ -4,23 +4,24 @@
 #include <QtGui>
 #include "../database/Database.h"
 #include "../database/DatabaseView.h"
-#include <map>
 
 class DbTab : public QWidget
 {
 	Q_OBJECT
 
 public:
-	DbTab(QWidget *parent=0);
+	DbTab(QWidget *parent = 0);
 	~DbTab();
 public slots:
 	void tableChanged(int index);
 	void addButtonPressed();
 	void changeButtonPressed();
 	void delButtonPressed();
-	void reloadTable(int pos=-1);
+	void reloadCurrentTable();
+protected:
+	virtual void showEvent(QShowEvent *ev);
 private:
-	std::map<int,std::pair<QString,QTableWidget*> > tables;
+	DbTableName currentTable;
 	QTableWidget *table;
 	QComboBox *tableBox;
 	QGridLayout *mainLayout;

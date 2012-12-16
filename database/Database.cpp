@@ -86,12 +86,12 @@ Snapshot Database::getSnapshot(int id)
 	executeQuery(query);	
 	QSqlRecord record = query.record();
 	query.next();
-	disconnect();
 
 	snapshot.width = query.value(record.indexOf("width")).toInt();
 	snapshot.height = query.value(record.indexOf("height")).toInt();
 	imageBytes = query.value(record.indexOf("snapshot")).toByteArray();
 	snapshot.created = query.value(record.indexOf("datetime")).toDateTime();
+	disconnect();
 
 	QImage image(snapshot.width, snapshot.height, QImage::Format_ARGB32);
 	buffer.setBuffer(&imageBytes);

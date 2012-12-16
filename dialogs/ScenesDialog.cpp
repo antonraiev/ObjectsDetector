@@ -19,7 +19,7 @@ ScenesDialog::ScenesDialog(QWidget *parent)
 int ScenesDialog::exec()
 {
 	setCursor(Qt::WaitCursor);
-	table=DatabaseView::getInstance().scenesTable();
+	table=DatabaseView::getInstance().getTable(SCENES);
 	setCursor(Qt::ArrowCursor);
 	connect(table,SIGNAL(itemSelectionChanged()),SLOT(selectionChanged()));
 	((QGridLayout*)layout())->addWidget(table,0,0,5,5);

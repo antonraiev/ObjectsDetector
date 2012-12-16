@@ -9,18 +9,18 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 	vTab = new VideoTab();
 	tabs->addTab(vTab,QIcon(":/img/video_icon.jpg"),"Видео");
 
-	snapTab = new SnapshotTab();
-	connect(vTab,SIGNAL(snapshotAdded(int)),snapTab,SLOT(addSlide(int)));
-	tabs->addTab(snapTab,QIcon(":/img/photo_icon.jpg"),"Снимки");
-	connect(tabs,SIGNAL(currentChanged(int)),snapTab,SLOT(drawSlides(int)));
-	connect(tabs,SIGNAL(currentChanged(int n)),SLOT(drawSlides(int n)));
+	//snapTab = new SnapshotTab();
+	//connect(vTab,SIGNAL(snapshotAdded(int)),snapTab,SLOT(addSlideFromCamera(int)));
+	//tabs->addTab(snapTab,QIcon(":/img/photo_icon.jpg"),"Снимки");
+	//connect(tabs,SIGNAL(currentChanged(int)),snapTab,SLOT(drawSlides(int)));
+	//connect(tabs,SIGNAL(currentChanged(int n)),SLOT(drawSlides(int n)));
 
-	sceneTab = new SceneTab();
-	tabs->addTab(sceneTab,QIcon(":/img/scene_icon.png"),"Сцена");
-	connect(snapTab,SIGNAL(sceneFixed(int)),sceneTab,SLOT(addScene(int)));
+	//sceneTab = new SceneTab();
+	//tabs->addTab(sceneTab,QIcon(":/img/scene_icon.png"),"Сцена");
+	//connect(snapTab,SIGNAL(sceneFixed(int)),sceneTab,SLOT(addScene(int)));
 
 	mapTab = new MapTab();
-	connect(sceneTab, SIGNAL(mapCreated(int)), mapTab, SLOT(addMap(int)));
+//	connect(sceneTab, SIGNAL(mapCreated(int)), mapTab, SLOT(addMap(int)));
 	tabs->addTab(mapTab, QIcon(":/img/map_icon.png"), "Карта");
 
 	dbTab = new DbTab();
@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 	QVBoxLayout *layout=new QVBoxLayout();
 	layout->addWidget(tabs);
 	setLayout(layout);
-	move(x(),y()-100);
+//	move(x(),y()-100);
 	resize(700,400);
 }
 MainWindow::~MainWindow()

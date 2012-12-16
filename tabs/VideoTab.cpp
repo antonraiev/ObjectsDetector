@@ -10,8 +10,9 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	video = new VideoView();
 	QTimer* videoTimer = new QTimer(this);
 	connect(videoTimer, SIGNAL(timeout()), video, SLOT(repaint()));
-	videoTimer->setInterval(10);
+	videoTimer->setInterval(50);
 	videoTimer->start();
+
 	QPushButton *snap=new QPushButton("Снимок");
 	QPushButton *leftArrow=new QPushButton(QIcon(":/img/leftarrow.jpg"),"");
 	QPushButton *topArrow=new QPushButton(QIcon(":/img/toparrow.jpg"),"");
@@ -29,6 +30,7 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	connect(leftArrow,SIGNAL(released()),SLOT(endCameraMove()));
 	connect(topArrow,SIGNAL(released()),SLOT(endCameraMove()));
 	connect(bottomArrow,SIGNAL(released()),SLOT(endCameraMove()));
+
 	QGridLayout *gridArrows=new QGridLayout;
 	gridArrows->addWidget(leftArrow,1,0,1,1);
 	gridArrows->addWidget(topArrow,0,1,1,1);
@@ -38,7 +40,6 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	controlGroup->setLayout(gridArrows);
 	connect(snap,SIGNAL(clicked()),SLOT(takeSnapshot()));
 	bool canRotate = video->getCamera()->canRotate();
-	//cameraEnabled=true;//Debug!!
 	if(!canRotate)
 	{
 		leftArrow->setEnabled(false);
@@ -46,12 +47,17 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 		bottomArrow->setEnabled(false);
 		rightArrow->setEnabled(false);
 	}
-	QGridLayout *mainLayout=new QGridLayout();
+	mainLayout = new QGridLayout();
 	QGridLayout *externLayout=new QGridLayout();
 	QVBoxLayout *videoLayout=new QVBoxLayout();
 	if(video->getCamera()->Enabled())
 	{
-		videoLayout->addWidget(video);
+		videoScene = new QGraphicsScene(this);
+		video->resize(600,400);
+		videoScene->addWidget(video);
+		videoView = new QGraphicsView(videoScene);
+		videoScene->setSceneRect(videoView->rect());
+		videoLayout->addWidget(videoView);
 	}
 	else
 	{
@@ -70,7 +76,54 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	mainLayout->addLayout(externLayout,0,0,3,3);
 	mainLayout->addWidget(controlGroup,0,3,1,1);
 	mainLayout->addWidget(snap,1,3,1,1);
+
+	createFuzzyControls();
 	setLayout(mainLayout);
+}
+
+void VideoTab::createFuzzyControls()
+{
+	fuzzyGrid = new FuzzyGrid(videoScene);
+	QGroupBox *fuzzyControls = new QGroupBox("Нечеткая логика:");	
+	QGridLayout *fuzzyLayout = new QGridLayout();
+	QCheckBox *showGridBox = new QCheckBox("Отображать сетку");
+	connect(showGridBox, SIGNAL(stateChanged(int)), fuzzyGrid, SLOT(showGrid(int)));
+	fuzzyLayout->addWidget(showGridBox, 0, 0, 1, 1);
+	QLabel *gridSizeLabel = new QLabel("Размер сетки:");
+	fuzzyLayout->addWidget(gridSizeLabel, 1, 0, 1, 1);
+	QRadioButton *oneSize = new QRadioButton("1");
+	connect(oneSize, SIGNAL(toggled(bool)), SLOT(radioToggled(bool)));
+	QRadioButton *twoSize = new QRadioButton("2");
+	connect(twoSize, SIGNAL(toggled(bool)), SLOT(radioToggled(bool)));
+	QRadioButton *fourSize = new QRadioButton("4");
+	connect(fourSize, SIGNAL(toggled(bool)), SLOT(radioToggled(bool)));
+	oneSize->setChecked(true);
+	fuzzyLayout->addWidget(oneSize, 2, 0, 1, 1);
+	fuzzyLayout->addWidget(twoSize, 3, 0, 1, 1);
+	fuzzyLayout->addWidget(fourSize, 4, 0, 1, 1);
+//	QPushButton *calcButton = new QPushButton("Выполнить расчет");
+	QCheckBox *showFactorsBox = new QCheckBox("Отображать факторы");
+//	connect(calcButton, SIGNAL(clicked()), fuzzyGrid, SLOT(doCalculations()));
+	connect(showFactorsBox, SIGNAL(stateChanged(int)), fuzzyGrid, SLOT(showFactors(int)));
+	fuzzyLayout->addWidget(showFactorsBox, 5, 0, 1, 1);
+	
+	fuzzyControls->setLayout(fuzzyLayout);
+	mainLayout->addWidget(fuzzyControls, 2,3,1,1);
+
+	QTimer* factorsTimer = new QTimer(this);
+	connect(factorsTimer, SIGNAL(timeout()), fuzzyGrid, SLOT(doCalculations()));
+	factorsTimer->setInterval(1000);
+	factorsTimer->start();
+}
+
+void VideoTab::radioToggled(bool checked)
+{
+	if(checked == false)
+	{
+		return;
+	}
+	int size = dynamic_cast<QRadioButton*>(sender())->text().toInt();
+	fuzzyGrid->setGranulaSize(size);
 }
 
 void VideoTab::takeSnapshot()
@@ -115,6 +168,21 @@ void VideoTab::endCameraMove()
 void VideoTab::paintEvent(QPaintEvent *ev)
 {
 	QPainter painter(this);
+	videoScene->setSceneRect(videoScene->itemsBoundingRect());                          
+}
+
+void VideoTab::keyPressEvent(QKeyEvent *ev)
+{
+	if(ev->key() == Qt::Key_Plus)
+	{
+		videoView->scale(1.2, 1.2);
+		videoScene->setSceneRect(videoScene->itemsBoundingRect());
+	}
+	else if(ev->key() == Qt::Key_Minus)
+	{
+		videoView->scale(0.8, 0.8);
+		videoScene->setSceneRect(videoScene->itemsBoundingRect());
+	}
 }
 
 VideoTab::~VideoTab()

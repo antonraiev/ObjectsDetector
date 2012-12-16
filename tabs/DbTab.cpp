@@ -6,23 +6,18 @@
 DbTab::DbTab(QWidget *parent)
 	: QWidget(parent)
 {
-//	tables[0]=std::make_pair("Снимки", DatabaseView::getInstance().snapshotsTable());
-//	tables[1]=std::make_pair("Сцены", DatabaseView::getInstance().scenesTable());
-//	tables[2]=std::make_pair("Описания объектов", DatabaseView::getInstance().descriptionsTable());
-//	tables[3]=std::make_pair("Объекты", DatabaseView::getInstance().objectsTable());
-//	tables[4]=std::make_pair("Карты",DatabaseView::getInstance().descriptionsTable());
+	currentTable = SNAPSHOTS;
 	tableBox = new QComboBox();
 	mainLayout = new QGridLayout();
 	mainLayout->addWidget(tableBox,0,4,1,2);
-	for(std::map<int,std::pair<QString,QTableWidget*> >::iterator it=tables.begin(); it!=tables.end(); it++)
+
+	QStringList tableNamesList = DatabaseView::getInstance().getTableNames();
+	for(int i = 0; i < tableNamesList.size(); i++)
 	{
-		tableBox->addItem(it->second.first);
-		mainLayout->addWidget(it->second.second,1,1,5,5);
-		it->second.second->hide();
+		tableBox->addItem(tableNamesList[i]);
 	}
 	connect(tableBox,SIGNAL(currentIndexChanged(int)),SLOT(tableChanged(int)));
-	table=tables[0].second;
-	table->show();
+
 	addButton=new QPushButton("Добавить");
 	connect(addButton,SIGNAL(clicked()),SLOT(addButtonPressed()));
 	mainLayout->addWidget(addButton,6,2,1,1);
@@ -40,12 +35,22 @@ DbTab::DbTab(QWidget *parent)
 	setLayout(mainLayout);
 }
 
+void DbTab::showEvent(QShowEvent *ev)
+{
+	table = DatabaseView::getInstance().getTable(currentTable);
+	mainLayout->addWidget(table, 1, 1, 5, 5);
+	table->show();
+}
+
 void DbTab::tableChanged(int index)
 {
+	currentTable = (DbTableName)index;
 	table->hide();
-	table=tables[index].second;
+	mainLayout->removeWidget(table);
+	table = DatabaseView::getInstance().getTable(currentTable);
+	mainLayout->addWidget(table, 1, 1, 5, 5);
 	table->show();
-	if(table==tables[2].second || table==tables[3].second)
+	if(currentTable == DESCRIPTIONS || currentTable == OBJECTS)
 	{
 		addButton->show();
 		changeButton->show();
@@ -56,63 +61,51 @@ void DbTab::tableChanged(int index)
 		changeButton->hide();
 	}
 }
+
 void DbTab::addButtonPressed()
 {
-	if(table==tables[2].second)
+	if(currentTable == DESCRIPTIONS)
 	{
 		AddChangeDescrDialog *dialog=new AddChangeDescrDialog(this);
-		int result=dialog->exec();
-		if(result==QDialog::Accepted)
+		int result = dialog->exec();
+		if(result == QDialog::Accepted)
 		{
-			
 			Database::getInstance().addDescription(dialog->name(),dialog->description());
-			delete tables[2].second;
-			tables[2].second=DatabaseView::getInstance().descriptionsTable();
-			mainLayout->addWidget(tables[2].second,1,1,5,5);
-			table=tables[2].second;
-			
+			reloadCurrentTable();
 		}
 	}
-	if(table==tables[3].second)
+	if(currentTable == OBJECTS)
 	{
 		AddObjectDialog *dialog=new AddObjectDialog(this);
-		int result=dialog->exec();
-		if(result==QDialog::Accepted)
+		int result = dialog->exec();
+		if(result == QDialog::Accepted)
 		{
 			QPixmap object=dialog->object();
-			
 			Database::getInstance().addObject(dialog->nameId(),dialog->object(),dialog->physHeight());
-			
-			delete tables[3].second;
-			tables[3].second=DatabaseView::getInstance().objectsTable();
-			mainLayout->addWidget(tables[3].second,1,1,5,5);
-			table=tables[3].second;
+			reloadCurrentTable();
 		}
 	}
 }
 void DbTab::changeButtonPressed()
 {
-	if(table==tables[2].second)
+	if(currentTable == DESCRIPTIONS)
 	{
 		AddChangeDescrDialog *dialog=new AddChangeDescrDialog(false,this);
 		dialog->setName(table->item(table->currentRow(),0)->data(Qt::DisplayRole).toString());
 		dialog->setDescription(table->item(table->currentRow(),1)->data(Qt::DisplayRole).toString());
-		int result=dialog->exec();
-		if(result==QDialog::Accepted)
+		int result = dialog->exec();
+		if(result == QDialog::Accepted)
 		{
 			Description description;
 			description.name=dialog->name();
 			description.description=dialog->description();
 			description.id=table->item(table->currentRow(),2)->data(Qt::DisplayRole).toInt();
-			
 			Database::getInstance().changeDescription(description);
-			
-			reloadTable(2);
 		}
 	}
-	if(table==tables[3].second)
+	if(currentTable == OBJECTS)
 	{
-		AddObjectDialog *dialog=new AddObjectDialog(this,false);
+		AddObjectDialog *dialog=new AddObjectDialog(this, false);
 		dialog->setPhysHeight(table->item(table->currentRow(),1)->data(Qt::DisplayRole).toInt());
 		int result=dialog->exec();
 	}
@@ -121,75 +114,56 @@ void DbTab::delButtonPressed()
 {
 	QModelIndexList list = selectedIndexes(table);
 	
-	if(table==tables[0].second)
+	if(currentTable == SNAPSHOTS)
 	{
-		for(int i=0; i<list.count(); i++)
+		for(int i = 0; i < list.count(); i++)
 		{
-			int id=table->item(list.at(i).row(),5)->data(Qt::DisplayRole).toInt();
+			int id = table->item(list.at(i).row(),5)->data(Qt::DisplayRole).toInt();
 			Database::getInstance().deleteSnapshot(id);
+			DatabaseView::getInstance().removeRow(SNAPSHOTS, list.at(i).row());
 		}
-		reloadTable(0);
 	}
-	else if(table==tables[1].second)
+	else if(currentTable == SCENES)
 	{
-		for(int i=0; i<list.count(); i++)
+		for(int i = 0; i < list.count(); i++)
 		{
-			int id=table->item(list.at(i).row(),5)->data(Qt::DisplayRole).toInt();
+			int id = table->item(list.at(i).row(),5)->data(Qt::DisplayRole).toInt();
 			Database::getInstance().deleteScene(id);
+			DatabaseView::getInstance().removeRow(SCENES, list.at(i).row());
 		}
-		reloadTable(1);
 	}
-	else if(table==tables[2].second)
+	else if(currentTable == DESCRIPTIONS)
 	{
-		for(int i=0; i<list.count(); i++)
+		for(int i = 0; i < list.count(); i++)
 		{
-			int id=table->item(list.at(i).row(),2)->data(Qt::DisplayRole).toInt();
+			int id = table->item(list.at(i).row(),2)->data(Qt::DisplayRole).toInt();
 			if(id == ROBOT_ID)
 			{
 				QMessageBox::warning(this, "Ошибка", "Робот не может быть удален", QMessageBox::Ok);
-				
 				return;
 			}
 			Database::getInstance().deleteDescription(id);
+			DatabaseView::getInstance().removeRow(DESCRIPTIONS, list.at(i).row());
 		}
-		reloadTable(2);
 	}
-	else if(table==tables[3].second)
+	else if(currentTable == OBJECTS)
 	{
-		for(int i=0; i<list.count(); i++)
+		for(int i = 0; i < list.count(); i++)
 		{
-			int id=table->item(list.at(i).row(),4)->data(Qt::DisplayRole).toInt();
+			int id = table->item(list.at(i).row(),4)->data(Qt::DisplayRole).toInt();
 			Database::getInstance().deleteObject(id);
+			DatabaseView::getInstance().removeRow(OBJECTS, list.at(i).row());
 		}
-		reloadTable(3);
 	}
-	
+	reloadCurrentTable();	
 }
-void DbTab::reloadTable(int pos)
+void DbTab::reloadCurrentTable()
 {
-	if(pos==-1)
-		pos=tableBox->currentIndex();
-	
-	delete tables[pos].second;
-	if(pos==0)
-	{
-		tables[pos].second=DatabaseView::getInstance().snapshotsTable();
-	}
-	else if(pos==1)
-	{
-		tables[pos].second=DatabaseView::getInstance().scenesTable();
-	}
-	else if(pos==2)
-	{
-		tables[pos].second=DatabaseView::getInstance().descriptionsTable();
-	}
-	else if(pos==3)
-	{
-		tables[pos].second=DatabaseView::getInstance().objectsTable();
-	}
-	mainLayout->addWidget(tables[pos].second,1,1,5,5);
-	table=tables[pos].second;
-	
+	table->hide();
+	mainLayout->removeWidget(table);
+	table = DatabaseView::getInstance().getTable(currentTable);
+	mainLayout->addWidget(table, 1, 1, 5, 5);
+	table->show();
 }
 DbTab::~DbTab()
 {
