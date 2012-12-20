@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     tabs->addTab(vTab,QIcon(":/img/video_icon.jpg"),"Видео");
 
     mapTab = new MapTab();
+    connect(vTab, SIGNAL(factorsChanged(int,QSize,QVector<double>&)),
+            mapTab, SLOT(renewMap(int,QSize,QVector<double>&)));
     tabs->addTab(mapTab, QIcon(":/img/map_icon.png"), "Карта");
 
 	QVBoxLayout *layout=new QVBoxLayout();

@@ -12,21 +12,22 @@ public:
 	MapTab(QWidget *parent=0);
 	~MapTab();
 public slots:
-	void addMap(int id);
-	void runMapsDialog();
+    void renewMap(int size, QSize gridSize, QVector<double>& factors);
 	void saveMapToFile();
 	void sendToKate();
 	void connectedToKate();
-	void errorToKate(QAbstractSocket::SocketError error);
+    void errorFromKate(QAbstractSocket::SocketError error);
 protected:
 	virtual void resizeEvent(QResizeEvent *ev);
 	virtual void wheelEvent(QWheelEvent *ev);
 	virtual void keyPressEvent(QKeyEvent *ev);
 private:
+    QLineEdit *ipEdit;
+    QLineEdit *portEdit;
+    QTextEdit *networkLog;
+    QPushButton *sendButton;
 	QGraphicsScene *scene;
 	QGraphicsView *sceneView;
-//	Map currentMap;
-	FuzzyGrid *fuzzyGrid;
 	QGridLayout *mainLayout;
 	QTcpSocket *kateSocket;
 };

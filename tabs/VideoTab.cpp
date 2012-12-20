@@ -7,9 +7,9 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 	: QWidget(parent, flags)
 {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
-	video = new VideoView();
+    video = new VideoView();
 	QTimer* videoTimer = new QTimer(this);
-	connect(videoTimer, SIGNAL(timeout()), video, SLOT(repaint()));
+    connect(videoTimer, SIGNAL(timeout()), video, SLOT(repaint()));
 	videoTimer->setInterval(50);
 	videoTimer->start();
 
@@ -23,7 +23,7 @@ VideoTab::VideoTab(QWidget *parent, Qt::WFlags flags)
 
     videoScene = new QGraphicsScene(this);
     videoView = new QGraphicsView(videoScene);
-	if(video->getCamera()->Enabled())
+    if(video->getCamera()->Enabled())
 	{
         videoScene->addWidget(video);
 		videoScene->setSceneRect(videoView->rect());
@@ -82,10 +82,11 @@ void VideoTab::createFuzzyControls()
 	fuzzyControls->setLayout(fuzzyLayout);
     mainLayout->addWidget(fuzzyControls, 1,3,1,1);
 
-	QTimer* factorsTimer = new QTimer(this);
-	connect(factorsTimer, SIGNAL(timeout()), fuzzyGrid, SLOT(doCalculations()));
-	factorsTimer->setInterval(1000);
+    QTimer* factorsTimer = new QTimer(this);
+    connect(factorsTimer, SIGNAL(timeout()), SLOT(renewFactors()));
+    factorsTimer->setInterval(1000);
     factorsTimer->start();
+    //QTimer::singleShot(30000, this, SLOT(renewFactors()));
 }
 
 void VideoTab::radioToggled(bool checked)
@@ -95,23 +96,32 @@ void VideoTab::radioToggled(bool checked)
 		return;
 	}
 	int size = dynamic_cast<QRadioButton*>(sender())->text().toInt();
-	fuzzyGrid->setGranulaSize(size);
+    fuzzyGrid->setGranulaSize(size);
+}
+
+void VideoTab::renewFactors()
+{
+    fuzzyGrid->doCalculations();
+    if(fuzzyGrid->sceneFixed())
+    {
+        int granulaSize = fuzzyGrid->granulaSize();
+        QSize gridSize = fuzzyGrid->gridSize();
+        QVector<double>& fuzzyFactors = fuzzyGrid->fuzzyFactors();
+        emit factorsChanged(granulaSize, gridSize, fuzzyFactors);
+    }
 }
 
 void VideoTab::fixScene()
 {
 	QSound sound("Resources/snapshot.wav");
 	sound.play();
-	QPixmap pixmap;
-	pixmap = pixmap.grabWidget(video);
-	
-    emit sceneFixed();
+    fuzzyGrid->fixStaticScene();
 }
 
 void VideoTab::paintEvent(QPaintEvent *ev)
 {
     QSize dimensions = video->getCamera()->getVideoDimensions();
-    video->resize(dimensions);
+//    video->resize(dimensions);
     videoScene->setSceneRect(videoScene->itemsBoundingRect());
 }
 

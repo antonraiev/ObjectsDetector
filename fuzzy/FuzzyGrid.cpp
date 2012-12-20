@@ -1,25 +1,39 @@
 #include "FuzzyGrid.h"
 #include <iostream>
+#include <algorithm>
 
 FuzzyGrid::FuzzyGrid()
 {
-	isGridVisible = isFactorsVisible = false;
-}
-
-void FuzzyGrid::setScene(QGraphicsScene *scene)
-{
-	this->scene = scene;
+    isGridVisible = isFactorsVisible = isSceneFixed = false;
 }
 
 FuzzyGrid::FuzzyGrid(QGraphicsScene *scene, int size)
 {
-	setScene(scene);
-	isGridVisible = isFactorsVisible = false;
-	setGranulaSize(size);
+    setScene(scene);
+    isGridVisible = isFactorsVisible = isSceneFixed = false;
+    setGranulaSize(size);
+}
+
+void FuzzyGrid::setScene(QGraphicsScene *scene)
+{
+    this->scene = scene;
+}
+
+void FuzzyGrid::fixStaticScene()
+{
+    staticFactors.clear();
+    diffFactors.clear();
+    foreach(QGraphicsTextItem *factor, factors)
+    {
+        staticFactors.push_back(factor->toPlainText().toDouble());
+        diffFactors.push_back(0);
+        isSceneFixed = true;
+    }
 }
 
 void FuzzyGrid::setGranulaSize(int size)
 {
+    isSceneFixed = false;
 	bool gridRestore = false, factorsRestore = false;
 	if(isGridVisible)
 	{
@@ -34,15 +48,15 @@ void FuzzyGrid::setGranulaSize(int size)
 
 	granules.clear();
 	factors.clear();
-	gridSize = size * 20;  // magic coefficient
-    QFont font("Arial", gridSize / 5);
+    m_granulaSize = size * 20;  // magic coefficient
+    QFont font("Arial", m_granulaSize / 5);
 
-	for(int i = 0; i < scene->width(); i += gridSize)
+    for(int i = 0; i < scene->width(); i += m_granulaSize)
 	{
-		for(int j = 0; j < scene->height(); j += gridSize)
+        for(int j = 0; j < scene->height(); j += m_granulaSize)
 		{
 			QGraphicsRectItem *granula = new QGraphicsRectItem();
-			granula->setRect(i, j, gridSize, gridSize);
+            granula->setRect(i, j, m_granulaSize, m_granulaSize);
 			granules.push_back(granula);
 			
 			QGraphicsTextItem *factor = new QGraphicsTextItem("0");
@@ -52,6 +66,8 @@ void FuzzyGrid::setGranulaSize(int size)
 		}
 	}
 
+    gridDimensions = QSize(scene->width() / m_granulaSize, scene->height() / m_granulaSize);
+
 	if(gridRestore)
 	{
 		showGrid(Qt::Checked);
@@ -59,7 +75,22 @@ void FuzzyGrid::setGranulaSize(int size)
 	if(factorsRestore)
 	{
 		showFactors(Qt::Checked);
-	}
+    }
+}
+
+int FuzzyGrid::granulaSize()
+{
+    return m_granulaSize;
+}
+
+QSize FuzzyGrid::gridSize()
+{
+    return gridDimensions;
+}
+
+QVector<double> &FuzzyGrid::fuzzyFactors()
+{
+    return diffFactors;
 }
 
 void FuzzyGrid::showGrid(int state)
@@ -104,7 +135,12 @@ void FuzzyGrid::showFactors(int state)
 
 bool FuzzyGrid::gridVisible()
 {
-	return isGridVisible;
+    return isGridVisible;
+}
+
+bool FuzzyGrid::sceneFixed()
+{
+    return isSceneFixed;
 }
 
 void FuzzyGrid::doCalculations()
@@ -125,8 +161,7 @@ void FuzzyGrid::doCalculations()
         showGrid(Qt::Checked);
     }
 
-	QRgb whitePixel = qRgb(255, 255, 255);
-	double whiteBrightness = 255 * gridSize * gridSize;
+    double whiteBrightness = 255 * m_granulaSize * m_granulaSize;
 	int factorIndex = 0;
 	foreach(QGraphicsRectItem *granula, granules)
 	{
@@ -144,7 +179,36 @@ void FuzzyGrid::doCalculations()
 		}
 
 		double factor = -1 + 2 * (brightness / whiteBrightness);
-        factors[factorIndex]->setPlainText(QString().number(factor, 'g', 2));
+        if(isSceneFixed)
+        {
+            diffFactors[factorIndex] = fabs(factor - staticFactors[factorIndex]);
+//            factors[factorIndex]->setPlainText(QString().number(-1 + fabs(factor-staticFactors[factorIndex]), 'g', 2));
+        }
+        else
+        {
+            factors[factorIndex]->setPlainText(QString().number(factor, 'g', 2));
+        }
 		factorIndex++;
 	}
+    if(isSceneFixed)
+    {
+        factorIndex = 0;
+        double maxValue = *std::max_element(diffFactors.begin(), diffFactors.end());
+        foreach(QGraphicsRectItem *granula, granules)
+        {
+            if(diffFactors[factorIndex] > 0.2)
+            {
+                factors[factorIndex]->setPlainText(QString().number(-1 + diffFactors[factorIndex] * 2 / maxValue, 'g', 2));
+            }
+            else
+            {
+                factors[factorIndex]->setPlainText(QString().number(-1 + diffFactors[factorIndex], 'g', 2));
+            }
+            factorIndex++;
+        }
+    }
 }
+/*
+ * 0.8 => 2
+ * 0.2 => 0.5
+ */

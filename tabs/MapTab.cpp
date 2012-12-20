@@ -4,65 +4,37 @@
 MapTab::MapTab(QWidget *parent)
     : QWidget(parent)
 {
-    scene=new QGraphicsScene();
-    sceneView=new QGraphicsView();
+    scene = new QGraphicsScene(this);
+    sceneView = new QGraphicsView();
     sceneView->setScene(scene);
     scene->setSceneRect(sceneView->rect());
-    mainLayout=new QGridLayout();
-    mainLayout->addWidget(sceneView,0,0,8,3);
+    mainLayout = new QGridLayout();
 
-    QPushButton *sendButton=new QPushButton("Îňďđŕâčňü");
+    mainLayout->addWidget(sceneView,0,0,8,4);
+    ipEdit = new QLineEdit("192.168.0.2");
+    portEdit = new QLineEdit("2005");
+    QHBoxLayout * netEditLayout = new QHBoxLayout();
+    netEditLayout->addWidget(new QLabel("IP:"));
+    netEditLayout->addWidget(ipEdit, 3);
+    netEditLayout->addWidget(new QLabel("Порт:"));
+    netEditLayout->addWidget(portEdit, 1);
+//    mainLayout->addLayout(netEditLayout, 0,4,1,1);
+
+    sendButton=new QPushButton("Начать передачу");
     connect(sendButton,SIGNAL(clicked()),SLOT(sendToKate()));
-    mainLayout->addWidget(sendButton,8,0,1,1);
+    mainLayout->addWidget(sendButton,1,4,1,1);
 
-    QPushButton *dialogButton=new QPushButton("Çŕăđóçčňü ęŕđňó...");
-    connect(dialogButton,SIGNAL(clicked()),SLOT(runMapsDialog()));
-    mainLayout->addWidget(dialogButton,8,1,1,1);
-
-    QPushButton *findButton=new QPushButton("Ńîőđŕíčňü â ôŕéë...");
+    QPushButton *findButton=new QPushButton("Сохранить в файл...");
     connect(findButton,SIGNAL(clicked()),SLOT(saveMapToFile()));
-    mainLayout->addWidget(findButton,8,2,1,1);
+    mainLayout->addWidget(findButton,2,4,1,1);
 
-    fuzzyGrid = new FuzzyGrid(scene);
-    QGroupBox *fuzzyControls = new QGroupBox("Íĺ÷ĺňęŕ˙ ëîăčęŕ:");
-    QGridLayout *fuzzyLayout = new QGridLayout();
-    QCheckBox *showGridBox = new QCheckBox("Îňîáđŕćŕňü ńĺňęó");
-    connect(showGridBox, SIGNAL(stateChanged(int)), fuzzyGrid, SLOT(showGrid(int)));
-    fuzzyLayout->addWidget(showGridBox, 0, 0, 1, 1);
-    QLabel *gridSizeLabel = new QLabel("Đŕçěĺđ ńĺňęč:");
-    fuzzyLayout->addWidget(gridSizeLabel, 1, 0, 1, 1);
-    QRadioButton *oneSize = new QRadioButton("1");
-    QRadioButton *twoSize = new QRadioButton("2");
-    QRadioButton *fourSize = new QRadioButton("4");
-    oneSize->setChecked(true);
-    fuzzyLayout->addWidget(oneSize, 2, 0, 1, 1);
-    fuzzyLayout->addWidget(twoSize, 3, 0, 1, 1);
-    fuzzyLayout->addWidget(fourSize, 4, 0, 1, 1);
-    QPushButton *calcButton = new QPushButton("Âűďîëíčňü đŕń÷ĺň");
-    connect(calcButton, SIGNAL(clicked()), fuzzyGrid, SLOT(doCalculations()));
-    fuzzyLayout->addWidget(calcButton, 5, 0, 1, 1);
+    networkLog = new QTextEdit();
+    networkLog->setReadOnly(true);
+    mainLayout->addWidget(networkLog,3,4,1,1);
 
-    fuzzyControls->setLayout(fuzzyLayout);
-
-    mainLayout->addWidget(fuzzyControls, 0, 3, 1, 1);
     setLayout(mainLayout);
 }
-void MapTab::addMap(int id)
-{
 
-//    currentMap = Database::getInstance().getMap(id);
-
-//    scene->clear();
-//    scene->addPixmap(QPixmap::fromImage(currentMap.image));
-}
-
-void MapTab::runMapsDialog()
-{
-//    ScenesDialog *dialog = new ScenesDialog(this);
-//    int result = dialog->exec();
-//    if(result == QDialog::Accepted)
-//        addMap(dialog->selectedSceneId());
-}
 void MapTab::saveMapToFile()
 {
 //    const QRgb OBSTACLE_COLOR = qRgb(255, 0, 0),
@@ -70,10 +42,10 @@ void MapTab::saveMapToFile()
 //    const char FREE_AREA_SYM	  = '0',
 //               ROBOT_AREA_SYM	  = '2',
 //               OBSTACLE_AREA_SYM  = '1';
-//    QString fileName = QFileDialog::getSaveFileName(this, "Ńîőđŕíčňü ęŕđňó ęŕę:", QDir::currentPath(), "*.txt");
-//    QFile file(fileName);
-//    file.open(QIODevice::WriteOnly | QIODevice::Text);
-//    QTextStream mapFileStream(&file);
+    QString fileName = QFileDialog::getSaveFileName(this, "Введите имя файла:", QDir::currentPath(), "*.txt");
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream mapFileStream(&file);
 //    mapFileStream << currentMap.image.width() << " " << currentMap.image.height() << "\n";
 //    for(int i = 0; i<currentMap.image.height(); i++)
 //    {
@@ -88,18 +60,23 @@ void MapTab::saveMapToFile()
 //        }
 //        mapFileStream << "\n";
 //    }
-//    file.close();
+    file.close();
 }
 void MapTab::sendToKate()
 {
+    sendButton->setEnabled(false);
+    QString ipAddress = ipEdit->text();
+    int port = portEdit->text().toInt();
     kateSocket = new QTcpSocket(this);
     connect(kateSocket, SIGNAL(connected()), SLOT(connectedToKate()));
-    connect(kateSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(errorToKate(QAbstractSocket::SocketError)));
-//	kateSocket->connectToHost("5.183.186.121", 2005);
-    kateSocket->connectToHost("192.168.216.174", 2005);
+    connect(kateSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(errorFromKate(QAbstractSocket::SocketError)));
+    networkLog->append("Подключение к " + ipAddress + ":" + QString().number(port) + "...");
+    kateSocket->connectToHost(ipAddress, port);
 }
 void MapTab::connectedToKate()
 {
+    networkLog->append("Подключение успешно");
+    sendButton->setText("Отключить");
 //    QString sendString = "";
 //    const QRgb OBSTACLE_COLOR = qRgb(255, 0, 0),
 //               ROBOT_COLOR	  = qRgb(0, 255, 0);
@@ -127,8 +104,10 @@ void MapTab::connectedToKate()
 //    kateSocket->flush();
 //    kateSocket->close();
 }
-void MapTab::errorToKate(QAbstractSocket::SocketError error)
+void MapTab::errorFromKate(QAbstractSocket::SocketError error)
 {
+    networkLog->append("Ошибка подключения");
+    sendButton->setEnabled(true);
 }
 void MapTab::resizeEvent(QResizeEvent *ev)
 {
@@ -157,4 +136,24 @@ void MapTab::keyPressEvent(QKeyEvent *ev)
 }
 MapTab::~MapTab()
 {
+}
+
+void MapTab::renewMap(int size, QSize gridSize, QVector<double> &factors)
+{
+    scene->clear();
+    for(int i = 0; i < gridSize.width(); i++)
+    {
+        for(int j = 0; j < gridSize.height(); j++)
+        {
+            QGraphicsRectItem *item = new QGraphicsRectItem();
+            item->setRect(i * size, j * size, size, size);
+            int brightness = 255 - factors[i + j] * 255;
+            if(brightness < 0)
+            {
+                brightness = 0;
+            }
+            item->setBrush(QBrush(QColor(255, brightness, brightness)));
+            scene->addItem(item);
+        }
+    }
 }
